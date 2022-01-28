@@ -9,7 +9,7 @@ module.exports = function( grunt ) {
 
 		addtextdomain: {
 			options: {
-				textdomain: 'wc-promo-cart',
+				textdomain: 'wc-cart-automation',
 			},
 			update_all_domains: {
 				options: {
@@ -32,8 +32,8 @@ module.exports = function( grunt ) {
 				options: {
 					domainPath: '/languages',
 					exclude: [ '\.git/*', 'bin/*', 'node_modules/*', 'tests/*' ],
-					mainFile: 'wc-promo-cart.php',
-					potFilename: 'wc-promo-cart.pot',
+					mainFile: 'wc-cart-automation.php',
+					potFilename: 'wc-cart-automation.pot',
 					potHeaders: {
 						poedit: true,
 						'x-poedit-keywordslist': true
