@@ -77,7 +77,6 @@ class WCCA {
 			}
 		}
 
-
 		$openings = get_option( 'wcca_openings_' . $wcca_ID, [] );
 		if ( empty( $current_user = WC()->session->get_customer_unique_id() ) ) {
 			// we should not get here, but just in case, consider that is some anonymous visitor
@@ -114,6 +113,6 @@ class WCCA {
 
 		$orders[ $order->get_id() ] = time();
 
-		update_option( 'wcca_openings_' . $wcca_ID, $orders );
+		update_option( 'wcca_orders_' . $wcca_ID, $orders );
 	}
 }

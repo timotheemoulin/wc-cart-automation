@@ -15,7 +15,33 @@ class WCCA_Admin {
 
 		// Custom style
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'admin_enqueue_scripts' ] );
+
+		// Add stats in the admin list
+		add_filter( 'manage_wcca_posts_columns', [ __CLASS__, 'manage_wcca_posts_columns' ] );
+		add_action( 'manage_wcca_posts_custom_column', [ __CLASS__, 'manage_wcca_posts_custom_column' ], 10, 2 );
 	}
+
+	public static function manage_wcca_posts_custom_column( $column, $post_id ): void {
+		if ( 'openings' === $column ) {
+			$openings = get_option( 'wcca_openings_' . $post_id, [] );
+			$count    = count( $openings );
+			printf( _x( '<span title="unique %s">u : %s</span>', 'unique', WCCA_PLUGIN_NAME ), $count, $count );
+			echo ' / ';
+			$count = count( $openings, COUNT_RECURSIVE );
+			printf( _x( '<span title="all %s">a : %s</span>', 'all', WCCA_PLUGIN_NAME ), $count, $count );
+		} else if ( 'orders' === $column ) {
+			$orders = get_option( 'wcca_orders_' . $post_id, [] );
+			echo count( $orders );
+		}
+	}
+
+	public static function manage_wcca_posts_columns( array $columns ): array {
+		$columns[ 'openings' ] = __( 'Openings', WCCA_PLUGIN_NAME );
+		$columns[ 'orders' ]   = __( 'Orders', WCCA_PLUGIN_NAME );
+
+		return $columns;
+	}
+
 
 	/**
 	 * Enqueue the admin styles.
