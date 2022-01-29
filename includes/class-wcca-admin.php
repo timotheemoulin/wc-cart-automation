@@ -85,6 +85,7 @@ class WCCA_Admin {
 
 				$html = sprintf( '<textarea name="wcca_%s">%s</textarea>', $option, $default_value );
 				break;
+			case 'radio':
 			case 'checkbox':
 			case 'select':
 			case 'select2':
@@ -106,11 +107,20 @@ class WCCA_Admin {
 				}
 
 				$html = '';
-				if ( 'checkbox' === $type ) {
+				if ( in_array( $type, [ 'checkbox', 'radio' ] ) ) {
+					if ( $single ) {
+						$type = 'radio';
+					} else {
+						$type = 'checkbox';
+					}
+
 					foreach ( $choices as $key => $value ) {
 						$selected = in_array( $key, (array) $default_value );
 						$html     .= sprintf(
-							'<input type="checkbox" name="wcca_%s%s%s" id="wcca_%s_%s" value="%s" %s><label for="wcca_%s_%s">%s</label>',
+							'<label for="wcca_%s_%s"><input type="%s" name="wcca_%s%s%s" id="wcca_%s_%s" value="%s" %s>&nbsp;%s</label>',
+							$option,
+							$key,
+							$type,
 							$single ? '' : '[',
 							$option,
 							$single ? '' : ']',
@@ -118,8 +128,6 @@ class WCCA_Admin {
 							$key,
 							$key,
 							( $selected ? 'checked' : '' ),
-							$option,
-							$key,
 							$value
 						);
 					}
@@ -133,7 +141,7 @@ class WCCA_Admin {
 					);
 
 					if ( $single ) {
-						$html .= '<option>' . __( 'Select a product', WCCA_PLUGIN_NAME ) . '</option>';
+						$html .= '<option>' . __( '- Select -', WCCA_PLUGIN_NAME ) . '</option>';
 					}
 
 					foreach ( $choices as $key => $value ) {

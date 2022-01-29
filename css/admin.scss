@@ -15,17 +15,17 @@
 			width: 100%;
 		}
 
-		&-checkbox {
+		&-checkbox, &-radio {
 			display: block;
 			overflow: auto;
 			padding: 0.5em 0;
 
-			> * {
-				float: left;
-			}
+			> label {
+				display: block;
 
-			input {
-				clear: both;
+				+ label {
+					margin-top: 0.5em;
+				}
 			}
 		}
 
@@ -34,4 +34,5 @@
 			flex-shrink: 0;
 		}
 	}
+
 }

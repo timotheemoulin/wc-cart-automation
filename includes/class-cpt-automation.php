@@ -3,7 +3,9 @@
 namespace WCCA;
 
 use Exception;
+use WC_Coupon;
 use WP_Post;
+use WP_Query;
 
 /**
  * This class handles the CPT management (admin registration, fields, and every related calculation).
@@ -12,24 +14,42 @@ class Cpt_Automation {
 	private static array $fields = [];
 
 	public function __construct() {
-		static::add_field( 'token', __( 'Unique token' ), 'text', [
-			'required' => true,
-		] );
 
-		static::add_field( 'products', __( 'Products to add' ), 'select2', [
-			'post_type' => 'product',
-			'single'    => false,
-		] );
-
-		static::add_field( 'coupons', __( 'Coupons to add' ), 'select2', [
-			'post_type' => 'shop_coupon',
-			'single'    => false,
-		] );
+		$this->configure_fields();
 
 		// WCCA Custom Post Type
 		add_action( 'init', [ __CLASS__, 'register_cpt' ] );
 		add_action( 'add_meta_boxes', [ __CLASS__, 'add_meta_boxes' ] );
-		add_action( 'save_post_wcca', [ __CLASS__, 'save_post' ], 10, 3 );
+		add_action( 'save_post_wcca', [ __CLASS__, 'save_post' ] );
+
+		// Fill in the cart with some nice stuff
+		add_action( 'init', [ __CLASS__, 'woocommerce_init' ] );
+	}
+
+	/**
+	 * Configure the fields used in the admin panels.
+	 */
+	private function configure_fields() {
+		static::add_field( 'token', __( 'Unique token', WCCA_PLUGIN_NAME ), 'text', [
+			'required' => true,
+		] );
+
+		static::add_field( 'add_to_current_cart', __( 'Merge with the user\'s cart', WCCA_PLUGIN_NAME ), 'radio', [
+			'choices' => [
+				0 => __( 'Erase current cart' ),
+				1 => __( 'Merge both carts' ),
+			],
+		] );
+
+		static::add_field( 'products', __( 'Products to add', WCCA_PLUGIN_NAME ), 'select2', [
+			'post_type' => 'product',
+			'single'    => false,
+		] );
+
+		static::add_field( 'coupons', __( 'Coupons to add', WCCA_PLUGIN_NAME ), 'select2', [
+			'post_type' => 'shop_coupon',
+			'single'    => false,
+		] );
 	}
 
 	/**
@@ -48,19 +68,103 @@ class Cpt_Automation {
 	}
 
 	/**
+	 * Check if there is a WCCA code in the URL
+	 * and add everything to the cart.
+	 * @throws Exception
+	 */
+	public static function woocommerce_init(): void {
+		if ( ! ( $wcca = $_REQUEST[ 'wcca' ] ?? null ) ) {
+			// bail early if there is no wcca code in the URL
+			return;
+		}
+
+		if ( is_admin() ) {
+			// no need to do anything on the admin screens
+			return;
+		}
+
+		$query = new WP_Query( [
+			'fields'       => 'ids',
+			'post_type'    => 'wcca',
+			'meta_key'     => 'wcca_token',
+			'meta_value'   => $wcca,
+			'meta_compare' => '=',
+		] );
+
+		if ( ! $query->found_posts ) {
+			// the wcca has maybe expired
+			// @todo add a notice to the user
+			return;
+		}
+
+		static::create_cart_from_wcca( current( $query->posts ) );
+	}
+
+	/**
+	 * Create the WCCA cart and proceed to checkout.
+	 *
+	 * @param      $post_ID
+	 *
+	 * @throws Exception
+	 */
+	private static function create_cart_from_wcca( $post_ID ): void {
+		if ( empty( $post_ID ) ) {
+			// something might have gone wrong earlier
+			return;
+		}
+
+		if ( $post_ID instanceof WP_Post ) {
+			$post_ID = $post_ID->ID;
+		}
+
+		$wcca = get_post_meta( $post_ID );
+
+		// ensure that the cart is loaded
+		WC()->cart->get_cart();
+
+		// should the WCCA be added to the current cart?
+		if ( wcca()->wcca_should_add_to_current_cart( $post_ID ) ) {
+			// should we save the current cart for later?
+			if ( wcca()->should_restore_cart_after_checkout() ) {
+				$cart_content = WC()->cart->get_cart();
+				$cart_coupons = WC()->cart->get_applied_coupons();
+				set_transient( 'wcca_saved_cart_' . WC()->customer->get_id(), [
+					'content' => $cart_content,
+					'coupons' => $cart_coupons,
+				], wcca()->keep_old_cart_for_hours() );
+			}
+		} else {
+			// initialize an empty cart
+			WC()->cart->empty_cart();
+		}
+
+		foreach ( $wcca[ 'wcca_products' ] as $product ) {
+			WC()->cart->add_to_cart( $product );
+		}
+
+		foreach ( $wcca[ 'wcca_coupons' ] as $coupon ) {
+			if ( $the_coupon = new WC_Coupon( $coupon ) ) {
+				WC()->cart->apply_coupon( $the_coupon->get_code() );
+			}
+		}
+
+		// redirect to the checkout URL for fast checkout
+		wp_safe_redirect( wc_get_checkout_url() );
+		exit;
+	}
+
+	/**
 	 * Save posted values.
 	 *
-	 * @param int     $post_ID Post ID.
-	 * @param WP_Post $post    Post object.
-	 * @param bool    $update  Whether this is an existing post being updated.
+	 * @param int $post_ID Post ID.
 	 */
-	public static function save_post( int $post_ID, WP_Post $post, bool $update ): void {
+	public static function save_post( int $post_ID ): void {
 		foreach ( static::$fields as $field => $data ) {
 			if ( $data[ 'args' ][ 'single' ] ?? true ) {
 				update_post_meta( $post_ID, 'wcca_' . $field, esc_html( $_REQUEST[ 'wcca_' . $field ] ?? null ) );
 			} else {
 				delete_post_meta( $post_ID, 'wcca_' . $field );
-				foreach ( $_REQUEST[ 'wcca_' . $field ] ?? [] as $key => $value ) {
+				foreach ( $_REQUEST[ 'wcca_' . $field ] ?? [] as $value ) {
 					add_post_meta( $post_ID, 'wcca_' . $field, esc_html( $value ) );
 				}
 			}
