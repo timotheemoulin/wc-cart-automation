@@ -33,23 +33,23 @@ class Cpt_Automation {
 	 * Configure the fields used in the admin panels.
 	 */
 	private function configure_fields() {
-		static::add_field( 'token', __( 'Unique token', WCCA_PLUGIN_NAME, 'wc-cart-automation' ), 'text', [
+		static::add_field( 'token', __( 'Unique token', WCCA_PLUGIN_NAME ), 'text', [
 			'required' => true,
 		] );
 
-		static::add_field( 'add_to_current_cart', __( 'Merge with the user\'s cart', WCCA_PLUGIN_NAME, 'wc-cart-automation' ), 'radio', [
+		static::add_field( 'add_to_current_cart', __( 'Merge with the user\'s cart', WCCA_PLUGIN_NAME ), 'radio', [
 			'choices' => [
-				0 => __( 'Erase current cart', 'wc-cart-automation' ),
-				1 => __( 'Merge both carts', 'wc-cart-automation' ),
+				0 => __( 'Erase current cart' ),
+				1 => __( 'Merge both carts' ),
 			],
 		] );
 
-		static::add_field( 'products', __( 'Products to add', WCCA_PLUGIN_NAME, 'wc-cart-automation' ), 'select2', [
+		static::add_field( 'products', __( 'Products to add', WCCA_PLUGIN_NAME ), 'select2', [
 			'post_type' => 'product',
 			'single'    => false,
 		] );
 
-		static::add_field( 'coupons', __( 'Coupons to add', WCCA_PLUGIN_NAME, 'wc-cart-automation' ), 'select2', [
+		static::add_field( 'coupons', __( 'Coupons to add', WCCA_PLUGIN_NAME ), 'select2', [
 			'post_type' => 'shop_coupon',
 			'single'    => false,
 		] );
@@ -126,7 +126,7 @@ class Cpt_Automation {
 
 		if ( ! $query->found_posts ) {
 			// the wcca has maybe expired
-			wc_add_notice( __( 'The link you followed was not valid. Please try to copy/paste it in your browser.', WCCA_PLUGIN_NAME ), 'wc-cart-automation', 'error' );
+			wc_add_notice( __( 'The link you followed was not valid. Please try to copy/paste it in your browser.', WCCA_PLUGIN_NAME ), 'error' );
 
 			// redirect to the cart so the notice is displayed
 			wp_safe_redirect( wc_get_cart_url() );
@@ -213,18 +213,18 @@ class Cpt_Automation {
 	public static function register_cpt(): void {
 		register_post_type( 'wcca', [
 			'labels'        => [
-				'name'               => _x( 'Automations', 'post type general name', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
-				'singular_name'      => _x( 'Automation', 'post type singular name', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
-				'add_new'            => _x( 'Add New', 'automation', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
-				'add_new_item'       => __( 'Add New Automation', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
-				'edit_item'          => __( 'Edit Automation', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
-				'new_item'           => __( 'New Automation', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
-				'view_item'          => __( 'View Automation', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
-				'view_items'         => __( 'View Automations', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
-				'search_items'       => __( 'Search Automations', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
-				'not_found'          => __( 'No automations found.', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
-				'not_found_in_trash' => __( 'No automations found in Trash.', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
-				'all_items'          => __( 'Automations', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
+				'name'               => _x( 'Automations', 'post type general name', WCCA_PLUGIN_NAME ),
+				'singular_name'      => _x( 'Automation', 'post type singular name', WCCA_PLUGIN_NAME ),
+				'add_new'            => _x( 'Add New', 'automation', WCCA_PLUGIN_NAME ),
+				'add_new_item'       => __( 'Add New Automation', WCCA_PLUGIN_NAME ),
+				'edit_item'          => __( 'Edit Automation', WCCA_PLUGIN_NAME ),
+				'new_item'           => __( 'New Automation', WCCA_PLUGIN_NAME ),
+				'view_item'          => __( 'View Automation', WCCA_PLUGIN_NAME ),
+				'view_items'         => __( 'View Automations', WCCA_PLUGIN_NAME ),
+				'search_items'       => __( 'Search Automations', WCCA_PLUGIN_NAME ),
+				'not_found'          => __( 'No automations found.', WCCA_PLUGIN_NAME ),
+				'not_found_in_trash' => __( 'No automations found in Trash.', WCCA_PLUGIN_NAME ),
+				'all_items'          => __( 'Automations', WCCA_PLUGIN_NAME ),
 			],
 			'public'        => false,
 			'show_ui'       => true,
@@ -240,7 +240,7 @@ class Cpt_Automation {
 	 * Register the CPT meta box
 	 */
 	public static function add_meta_boxes(): void {
-		add_meta_box( 'wcca-fields', __( 'Configuration', WCCA_PLUGIN_NAME, 'wc-cart-automation' ), [ __CLASS__, 'render_meta_box_fields' ], 'wcca' );
+		add_meta_box( 'wcca-fields', __( 'Configuration', WCCA_PLUGIN_NAME ), [ __CLASS__, 'render_meta_box_fields' ], 'wcca' );
 	}
 
 	/**

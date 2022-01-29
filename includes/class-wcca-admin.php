@@ -27,7 +27,7 @@ class WCCA_Admin {
 	public static function wp_dashboard_setup(): void {
 		add_meta_box(
 			'wcca-stats',
-			__( 'Cart automation', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
+			__( 'Cart automation', WCCA_PLUGIN_NAME ),
 			[ __CLASS__, 'dashboard_render_stats' ],
 			'dashboard',
 			'normal',
@@ -39,18 +39,18 @@ class WCCA_Admin {
 	 * @throws Exception
 	 */
 	public static function dashboard_render_stats(): void {
-		printf( '<h1>%s</h1>', __( 'Cart Automation configuration', WCCA_PLUGIN_NAME, 'wc-cart-automation' ) );
+		printf( '<h1>%s</h1>', __( 'Cart Automation configuration', WCCA_PLUGIN_NAME ) );
 
 		$active = ( new WP_Query( [ 'post_type' => 'wcca', 'post_status' => 'publish' ] ) )->post_count;
-		printf( '<p>' . _n( 'Active automation : %s', WCCA_PLUGIN_NAME, $active, 'wc-cart-automation' ) . '</p>', $active );
+		printf( '<p>' . _n( 'Active automation : %s', WCCA_PLUGIN_NAME, $active ) . '</p>', $active );
 
 		$stati = get_post_stati();
 		unset( $stati[ 'auto-draft' ], $stati[ 'revision' ], $stati[ 'publish' ] );
 		$inactive = ( new WP_Query( [ 'post_type' => 'wcca', 'post_status' => $stati ] ) )->post_count;
 
-		printf( '<p>' . _n( 'Inactive automation : %s', WCCA_PLUGIN_NAME, $inactive, 'wc-cart-automation' ) . '</p>', $inactive );
+		printf( '<p>' . _n( 'Inactive automation : %s', WCCA_PLUGIN_NAME, $inactive ) . '</p>', $inactive );
 
-		printf( '<p><a href="%s">%s</a></p>', admin_url( 'edit.php?post_type=wcca' ), __( 'View Automations', WCCA_PLUGIN_NAME, 'wc-cart-automation' ) );
+		printf( '<p><a href="%s">%s</a></p>', admin_url( 'edit.php?post_type=wcca' ), __( 'View Automations', WCCA_PLUGIN_NAME ) );
 	}
 
 	/**
@@ -142,7 +142,7 @@ class WCCA_Admin {
 					);
 
 					if ( $single ) {
-						$html .= '<option>' . __( '- Select -', WCCA_PLUGIN_NAME, 'wc-cart-automation' ) . '</option>';
+						$html .= '<option>' . __( '- Select -', WCCA_PLUGIN_NAME ) . '</option>';
 					}
 
 					foreach ( $choices as $key => $value ) {
@@ -159,7 +159,7 @@ class WCCA_Admin {
 				}
 				break;
 			default:
-				throw new Exception( sprintf( __( 'Unrecognized option field of type %s.', 'wc-cart-automation' ), $type ) );
+				throw new Exception( sprintf( __( 'Unrecognized option field of type %s.' ), $type ) );
 		}
 
 		printf(
