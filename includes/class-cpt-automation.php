@@ -26,8 +26,11 @@ class Cpt_Automation {
 		// Fill in the cart with some nice stuff
 		add_action( 'init', [ __CLASS__, 'woocommerce_init' ] );
 
-		// Restore previously stored cart
+		// Finalize the process
 		add_action( 'woocommerce_pre_payment_complete', [ __CLASS__, 'woocommerce_pre_payment_complete' ] );
+
+		// Store some logs
+		add_action( 'woocommerce_checkout_order_created', [ __CLASS__, 'woocommerce_checkout_order_created' ] );
 	}
 
 	/**
@@ -69,6 +72,11 @@ class Cpt_Automation {
 			'type'  => $type,
 			'args'  => $args,
 		];
+	}
+
+	public static function woocommerce_checkout_order_created( $order ): void {
+		// Handle the stats
+		wcca()->add_order_to_wcca( $order );
 	}
 
 	/**
@@ -125,12 +133,18 @@ class Cpt_Automation {
 			'meta_compare' => '=',
 		] );
 
+		if ( ! WC()->session->has_session() ) {
+			// manually set the session so notices are persisted
+			WC()->session->set_customer_session_cookie( true );
+		}
+
 		if ( ! $query->found_posts ) {
 			// the wcca has maybe expired
 			wc_add_notice( __( 'The link you followed was not valid. Please try to copy/paste it in your browser.', WCCA_PLUGIN_NAME ), 'error' );
 
 			// redirect to the cart so the notice is displayed
-			wp_safe_redirect( wc_get_cart_url() );
+			wp_safe_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
+			// wp_safe_redirect( wc_get_cart_url() );
 			exit;
 		}
 
@@ -140,27 +154,27 @@ class Cpt_Automation {
 	/**
 	 * Create the WCCA cart and proceed to checkout.
 	 *
-	 * @param      $post_ID
+	 * @param      $wcca_ID
 	 *
 	 * @throws Exception
 	 */
-	private static function create_cart_from_wcca( $post_ID ): void {
-		if ( empty( $post_ID ) ) {
+	private static function create_cart_from_wcca( $wcca_ID ): void {
+		if ( empty( $wcca_ID ) ) {
 			// something might have gone wrong earlier
 			return;
 		}
 
-		if ( $post_ID instanceof WP_Post ) {
-			$post_ID = $post_ID->ID;
+		if ( $wcca_ID instanceof WP_Post ) {
+			$wcca_ID = $wcca_ID->ID;
 		}
 
-		$wcca = get_post_meta( $post_ID );
+		$wcca = get_post_meta( $wcca_ID );
 
 		// ensure that the cart is loaded
 		WC()->cart->get_cart();
 
 		// should the WCCA be added to the current cart?
-		if ( wcca()->wcca_should_add_to_current_cart( $post_ID ) ) {
+		if ( wcca()->wcca_should_add_to_current_cart( $wcca_ID ) ) {
 			// should we save the current cart for later?
 			if ( wcca()->should_restore_cart_after_checkout() ) {
 				$cart_content = WC()->cart->get_cart();
@@ -175,6 +189,8 @@ class Cpt_Automation {
 			WC()->cart->empty_cart();
 		}
 
+		wcca()->add_customer_wcca_opening( $wcca_ID );
+
 		foreach ( $wcca[ 'wcca_products' ] as $product ) {
 			WC()->cart->add_to_cart( $product );
 		}
@@ -185,7 +201,11 @@ class Cpt_Automation {
 			}
 		}
 
-		// redirect to the checkout URL for fast checkout
+		// Add some nice notice but previously disable other so the output is not polluted
+		wc_clear_notices();
+		wc_add_notice( __( 'Your cart has been successfully updated.', WCCA_PLUGIN_NAME ) );
+
+		// Redirect to the checkout URL for fast checkout
 		wp_safe_redirect( wc_get_checkout_url() );
 		exit;
 	}
@@ -193,16 +213,16 @@ class Cpt_Automation {
 	/**
 	 * Save posted values.
 	 *
-	 * @param int $post_ID Post ID.
+	 * @param int $wcca_ID Post ID.
 	 */
-	public static function save_post( int $post_ID ): void {
+	public static function save_post( int $wcca_ID ): void {
 		foreach ( static::$fields as $field => $data ) {
 			if ( $data[ 'args' ][ 'single' ] ?? true ) {
-				update_post_meta( $post_ID, 'wcca_' . $field, esc_html( $_REQUEST[ 'wcca_' . $field ] ?? null ) );
+				update_post_meta( $wcca_ID, 'wcca_' . $field, esc_html( $_REQUEST[ 'wcca_' . $field ] ?? null ) );
 			} else {
-				delete_post_meta( $post_ID, 'wcca_' . $field );
+				delete_post_meta( $wcca_ID, 'wcca_' . $field );
 				foreach ( $_REQUEST[ 'wcca_' . $field ] ?? [] as $value ) {
-					add_post_meta( $post_ID, 'wcca_' . $field, esc_html( $value ) );
+					add_post_meta( $wcca_ID, 'wcca_' . $field, esc_html( $value ) );
 				}
 			}
 		}
