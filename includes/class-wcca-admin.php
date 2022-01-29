@@ -90,7 +90,7 @@ class WCCA_Admin {
 			case 'select':
 			case 'select2':
 				$single        = $args[ 'single' ] ?? true;
-				$default_value = $_REQUEST[ 'wcca_' . $option ] ?? get_post_meta( get_the_ID(), 'wcca_' . $option, $single ) ?: [];
+				$default_value = $_REQUEST[ 'wcca_' . $option ] ?? get_post_meta( get_the_ID(), 'wcca_' . $option, $single );
 
 				if ( $post_type = $args[ 'post_type' ] ?? null ) {
 					$query   = new WP_Query( [
