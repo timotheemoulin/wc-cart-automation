@@ -21,6 +21,11 @@ class Cpt_Automation {
 			'single'    => false,
 		] );
 
+		static::add_field( 'coupons', __( 'Coupons to add' ), 'select2', [
+			'post_type' => 'shop_coupon',
+			'single'    => false,
+		] );
+
 		// WCCA Custom Post Type
 		add_action( 'init', [ __CLASS__, 'register_cpt' ] );
 		add_action( 'add_meta_boxes', [ __CLASS__, 'add_meta_boxes' ] );
