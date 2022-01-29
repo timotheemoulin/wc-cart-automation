@@ -24,29 +24,32 @@ class Cpt_Automation {
 
 		// Fill in the cart with some nice stuff
 		add_action( 'init', [ __CLASS__, 'woocommerce_init' ] );
+
+		// Restore previously stored cart
+		add_action( 'woocommerce_pre_payment_complete', [ __CLASS__, 'woocommerce_pre_payment_complete' ] );
 	}
 
 	/**
 	 * Configure the fields used in the admin panels.
 	 */
 	private function configure_fields() {
-		static::add_field( 'token', __( 'Unique token', WCCA_PLUGIN_NAME ), 'text', [
+		static::add_field( 'token', __( 'Unique token', WCCA_PLUGIN_NAME, 'wc-cart-automation' ), 'text', [
 			'required' => true,
 		] );
 
-		static::add_field( 'add_to_current_cart', __( 'Merge with the user\'s cart', WCCA_PLUGIN_NAME ), 'radio', [
+		static::add_field( 'add_to_current_cart', __( 'Merge with the user\'s cart', WCCA_PLUGIN_NAME, 'wc-cart-automation' ), 'radio', [
 			'choices' => [
-				0 => __( 'Erase current cart' ),
-				1 => __( 'Merge both carts' ),
+				0 => __( 'Erase current cart', 'wc-cart-automation' ),
+				1 => __( 'Merge both carts', 'wc-cart-automation' ),
 			],
 		] );
 
-		static::add_field( 'products', __( 'Products to add', WCCA_PLUGIN_NAME ), 'select2', [
+		static::add_field( 'products', __( 'Products to add', WCCA_PLUGIN_NAME, 'wc-cart-automation' ), 'select2', [
 			'post_type' => 'product',
 			'single'    => false,
 		] );
 
-		static::add_field( 'coupons', __( 'Coupons to add', WCCA_PLUGIN_NAME ), 'select2', [
+		static::add_field( 'coupons', __( 'Coupons to add', WCCA_PLUGIN_NAME, 'wc-cart-automation' ), 'select2', [
 			'post_type' => 'shop_coupon',
 			'single'    => false,
 		] );
@@ -65,6 +68,36 @@ class Cpt_Automation {
 			'type'  => $type,
 			'args'  => $args,
 		];
+	}
+
+	/**
+	 * Once the order is complete, restore the old cart.
+	 */
+	public static function woocommerce_pre_payment_complete(): void {
+		// This action is added only if the order is successful.
+		add_action( 'woocommerce_cart_emptied', [ __CLASS__, 'woocommerce_cart_emptied' ] );
+	}
+
+	/**
+	 * If there is a stored cart for the current customer, import it.
+	 *
+	 * @throws Exception
+	 */
+	public static function woocommerce_cart_emptied(): void {
+		$cart = get_transient( 'wcca_saved_cart_' . WC()->customer->get_id() );
+		if ( $cart ) {
+			// ensure that the cart is loaded
+			WC()->cart->get_cart();
+			foreach ( $cart[ 'content' ] as $product ) {
+				WC()->cart->add_to_cart( $product );
+			}
+
+			foreach ( $cart[ 'coupons' ] as $coupon ) {
+				if ( $the_coupon = new WC_Coupon( $coupon ) ) {
+					WC()->cart->apply_coupon( $the_coupon->get_code() );
+				}
+			}
+		}
 	}
 
 	/**
@@ -93,8 +126,11 @@ class Cpt_Automation {
 
 		if ( ! $query->found_posts ) {
 			// the wcca has maybe expired
-			// @todo add a notice to the user
-			return;
+			wc_add_notice( __( 'The link you followed was not valid. Please try to copy/paste it in your browser.', WCCA_PLUGIN_NAME ), 'wc-cart-automation', 'error' );
+
+			// redirect to the cart so the notice is displayed
+			wp_safe_redirect( wc_get_cart_url() );
+			exit;
 		}
 
 		static::create_cart_from_wcca( current( $query->posts ) );
@@ -177,18 +213,18 @@ class Cpt_Automation {
 	public static function register_cpt(): void {
 		register_post_type( 'wcca', [
 			'labels'        => [
-				'name'               => _x( 'Automations', 'post type general name' ),
-				'singular_name'      => _x( 'Automation', 'post type singular name' ),
-				'add_new'            => _x( 'Add New', 'automation' ),
-				'add_new_item'       => __( 'Add New Automation' ),
-				'edit_item'          => __( 'Edit Automation' ),
-				'new_item'           => __( 'New Automation' ),
-				'view_item'          => __( 'View Automation' ),
-				'view_items'         => __( 'View Automations' ),
-				'search_items'       => __( 'Search Automations' ),
-				'not_found'          => __( 'No automations found.' ),
-				'not_found_in_trash' => __( 'No automations found in Trash.' ),
-				'all_items'          => __( 'Automations' ),
+				'name'               => _x( 'Automations', 'post type general name', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
+				'singular_name'      => _x( 'Automation', 'post type singular name', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
+				'add_new'            => _x( 'Add New', 'automation', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
+				'add_new_item'       => __( 'Add New Automation', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
+				'edit_item'          => __( 'Edit Automation', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
+				'new_item'           => __( 'New Automation', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
+				'view_item'          => __( 'View Automation', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
+				'view_items'         => __( 'View Automations', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
+				'search_items'       => __( 'Search Automations', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
+				'not_found'          => __( 'No automations found.', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
+				'not_found_in_trash' => __( 'No automations found in Trash.', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
+				'all_items'          => __( 'Automations', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
 			],
 			'public'        => false,
 			'show_ui'       => true,
@@ -204,7 +240,7 @@ class Cpt_Automation {
 	 * Register the CPT meta box
 	 */
 	public static function add_meta_boxes(): void {
-		add_meta_box( 'wcca-fields', __( 'Configuration', WCCA_PLUGIN_NAME ), [ __CLASS__, 'render_meta_box_fields' ], 'wcca' );
+		add_meta_box( 'wcca-fields', __( 'Configuration', WCCA_PLUGIN_NAME, 'wc-cart-automation' ), [ __CLASS__, 'render_meta_box_fields' ], 'wcca' );
 	}
 
 	/**

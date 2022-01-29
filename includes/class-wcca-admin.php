@@ -10,46 +10,47 @@ use WP_Query;
  */
 class WCCA_Admin {
 	public function __construct() {
-		// options menu
-		add_action( 'admin_menu', [ __CLASS__, 'admin_menu' ] );
+		// dashboard
+		add_action( 'wp_dashboard_setup', [ __CLASS__, 'wp_dashboard_setup' ] );
 
 		// Custom style
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'admin_enqueue_scripts' ] );
 	}
 
-
-	public static function admin_menu(): void {
-		add_submenu_page(
-			'woocommerce-marketing',
-			__( 'Automation options', WCCA_PLUGIN_NAME ),
-			__( 'Automation options', WCCA_PLUGIN_NAME ),
-			'manage_woocommerce',
-			'wcca-options',
-			[ WCCA_Admin::class, 'dashboard' ],
-			'wcca-10'
-		);
-	}
-
+	/**
+	 * Enqueue the admin styles.
+	 */
 	public static function admin_enqueue_scripts(): void {
 		wp_enqueue_style( 'wcca-admin', wcca()->plugin_url() . '/css/admin.css' );
+	}
+
+	public static function wp_dashboard_setup(): void {
+		add_meta_box(
+			'wcca-stats',
+			__( 'Cart automation', WCCA_PLUGIN_NAME, 'wc-cart-automation' ),
+			[ __CLASS__, 'dashboard_render_stats' ],
+			'dashboard',
+			'normal',
+			'high'
+		);
 	}
 
 	/**
 	 * @throws Exception
 	 */
-	public static function dashboard(): void {
-		printf( '<h1>%s</h1>', __( 'Cart Automation configuration', WCCA_PLUGIN_NAME ) );
-		echo '<h2>Stats</h2>';
+	public static function dashboard_render_stats(): void {
+		printf( '<h1>%s</h1>', __( 'Cart Automation configuration', WCCA_PLUGIN_NAME, 'wc-cart-automation' ) );
 
-		$active   = ( new WP_Query( [ 'post_type' => 'wcca', 'post_status' => 'publish' ] ) )->post_count;
-		$inactive = ( new WP_Query( [ 'post_type' => 'wcca', 'post_status' => [ 'draft', 'pending' ] ] ) )->post_count;
-		$future   = ( new WP_Query( [ 'post_type' => 'wcca', 'post_status' => 'future' ] ) )->post_count;
+		$active = ( new WP_Query( [ 'post_type' => 'wcca', 'post_status' => 'publish' ] ) )->post_count;
+		printf( '<p>' . _n( 'Active automation : %s', WCCA_PLUGIN_NAME, $active, 'wc-cart-automation' ) . '</p>', $active );
 
-		printf( '<p>%s<br>%s<br>%s</p>',
-			sprintf( _x( 'Active automation : %s', WCCA_PLUGIN_NAME, $active ), $active ),
-			sprintf( _x( 'Inactive automation : %s', WCCA_PLUGIN_NAME, $inactive ), $inactive ),
-			sprintf( _x( 'Scheduled automation : %s', WCCA_PLUGIN_NAME, $future ), $future ),
-		);
+		$stati = get_post_stati();
+		unset( $stati[ 'auto-draft' ], $stati[ 'revision' ], $stati[ 'publish' ] );
+		$inactive = ( new WP_Query( [ 'post_type' => 'wcca', 'post_status' => $stati ] ) )->post_count;
+
+		printf( '<p>' . _n( 'Inactive automation : %s', WCCA_PLUGIN_NAME, $inactive, 'wc-cart-automation' ) . '</p>', $inactive );
+
+		printf( '<p><a href="%s">%s</a></p>', admin_url( 'edit.php?post_type=wcca' ), __( 'View Automations', WCCA_PLUGIN_NAME, 'wc-cart-automation' ) );
 	}
 
 	/**
@@ -141,7 +142,7 @@ class WCCA_Admin {
 					);
 
 					if ( $single ) {
-						$html .= '<option>' . __( '- Select -', WCCA_PLUGIN_NAME ) . '</option>';
+						$html .= '<option>' . __( '- Select -', WCCA_PLUGIN_NAME, 'wc-cart-automation' ) . '</option>';
 					}
 
 					foreach ( $choices as $key => $value ) {
@@ -158,7 +159,7 @@ class WCCA_Admin {
 				}
 				break;
 			default:
-				throw new Exception( sprintf( __( 'Unrecognized option field of type %s.' ), $type ) );
+				throw new Exception( sprintf( __( 'Unrecognized option field of type %s.', 'wc-cart-automation' ), $type ) );
 		}
 
 		printf(
