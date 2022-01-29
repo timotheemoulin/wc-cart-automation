@@ -25,8 +25,9 @@ if ( ! defined( 'WCCA_PLUGIN_NAME' ) ) {
 // Include the autoloader.
 include_once dirname( WCCA_PLUGIN_FILE ) . '/includes/autoloader.php';
 
-function wcca(): WCCA\WC_Cart_Automation {
-	return WCCA\WC_Cart_Automation::instance();
+function wcca(): WCCA\WCCA {
+	return WCCA\WCCA::instance();
 }
 
-wcca()->init();
+// Init everything
+wcca();

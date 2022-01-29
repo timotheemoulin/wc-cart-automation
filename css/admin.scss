@@ -1,0 +1,18 @@
+.wcca-field {
+	display: flex;
+	align-items: center;
+
+	label {
+		font-weight: bold;
+		flex-basis: 30%;
+
+		& + input {
+			flex-grow: 1;
+		}
+
+		& + textarea {
+			flex-basis: 100%;
+			flex-shrink: 0;
+		}
+	}
+}
