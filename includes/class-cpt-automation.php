@@ -19,7 +19,8 @@ class Cpt_Automation {
 
 		// WCCA Custom Post Type
 		add_action( 'init', [ __CLASS__, 'register_cpt' ] );
-		add_action( 'add_meta_boxes', [ __CLASS__, 'add_meta_boxes' ] );
+		add_action( 'add_meta_boxes_wcca', [ __CLASS__, 'add_meta_boxes' ] );
+		add_action( 'edit_form_before_permalink', [ __CLASS__, 'edit_form_before_permalink' ] );
 		add_action( 'save_post_wcca', [ __CLASS__, 'save_post' ] );
 
 		// Fill in the cart with some nice stuff
@@ -240,7 +241,11 @@ class Cpt_Automation {
 	 * Register the CPT meta box
 	 */
 	public static function add_meta_boxes(): void {
-		add_meta_box( 'wcca-fields', __( 'Configuration', WCCA_PLUGIN_NAME ), [ __CLASS__, 'render_meta_box_fields' ], 'wcca' );
+		// Remove the slug metabox
+		remove_meta_box( 'slugdiv', 'wcca', 'normal' );
+
+		// Add our custom fields
+		add_meta_box( 'wcca-fields', __( 'Configuration', WCCA_PLUGIN_NAME ), [ __CLASS__, 'render_meta_box_fields' ], 'wcca', 'advanced', 'high' );
 	}
 
 	/**
@@ -252,4 +257,33 @@ class Cpt_Automation {
 		}
 	}
 
+	/**
+	 * Display the WCCA link.
+	 *
+	 * @param WP_Post $post
+	 */
+	public function edit_form_before_permalink( WP_Post $post ): void {
+		if ( 'wcca' !== $post->post_type ) {
+			// Only check for WCCA post type
+			return;
+		}
+
+		if ( in_array( $post->post_status, [ 'publish', 'future' ] ) ) {
+			if ( $token = get_post_meta( $post->ID, 'wcca_token', true ) ) {
+				$link = get_home_url() . '?' . http_build_query( [ 'wcca' => $token ] );
+				echo '<p>';
+				_e( 'Anyone clicking on this link will activate the cart automation.', WCCA_PLUGIN_NAME );
+				printf( '<br><a href="%s" target="_blank">%s</a>', $link, $link );
+				echo '</p>';
+			}
+
+			if ( 'future' === $post->post_status ) {
+				echo '<p class="warning">';
+				printf( __( 'Be careful, your link will only work at : %s', WCCA_PLUGIN_NAME ), $post->post_date );
+				echo '</p>';
+			}
+		} else {
+			printf( __( 'You must first publish this page to enable the link. Clicking on a disable link will not work.', WCCA_PLUGIN_NAME ) );
+		}
+	}
 }

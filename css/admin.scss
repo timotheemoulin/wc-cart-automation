@@ -1,38 +1,45 @@
-.wcca-field {
-	display: flex;
-	align-items: start;
-	margin: 1rem 0;
+body.post-type-wcca {
+	.wcca-field {
+		display: flex;
+		align-items: start;
+		margin: 1rem 0;
 
-	.wcca-label {
-		font-weight: bold;
-		flex-basis: 30%;
-	}
-
-	.wcca-input {
-		flex-grow: 1;
-
-		> * {
-			width: 100%;
+		.wcca-label {
+			font-weight: bold;
+			flex-basis: 30%;
 		}
 
-		&-checkbox, &-radio {
-			display: block;
-			overflow: auto;
-			padding: 0.5em 0;
+		.wcca-input {
+			flex-grow: 1;
 
-			> label {
+			> * {
+				width: 100%;
+			}
+
+			&-checkbox, &-radio {
 				display: block;
+				overflow: auto;
+				padding: 0.5em 0;
 
-				+ label {
-					margin-top: 0.5em;
+				> label {
+					display: block;
+
+					+ label {
+						margin-top: 0.5em;
+					}
 				}
 			}
-		}
 
-		&-textarea {
-			flex-basis: 100%;
-			flex-shrink: 0;
+			&-textarea {
+				flex-basis: 100%;
+				flex-shrink: 0;
+			}
 		}
 	}
 
+	p.warning {
+		padding: 0.5em;
+		color: darken(red, 10);
+		background-color: lighten(red, 45);
+	}
 }
