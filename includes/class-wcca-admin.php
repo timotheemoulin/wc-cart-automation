@@ -61,6 +61,8 @@ class WCCA_Admin {
 	 * @throws Exception
 	 */
 	public static function the_custom_field_admin( string $option, string $label, string $type = 'text', array $args = [] ): void {
+		$required = $args[ 'required' ] ?? false;
+
 		switch ( $type ) {
 			case 'text':
 			case 'url':
@@ -69,7 +71,14 @@ class WCCA_Admin {
 			case 'number':
 				$default_value = $_REQUEST[ 'wcca_' . $option ] ?? get_post_meta( get_the_ID(), 'wcca_' . $option, true ) ?: null;
 
-				$html = sprintf( '<input type="%s" name="wcca_%s" id="wcca_%s" value="%s">', $type, $option, $option, $default_value );
+				$html = sprintf(
+					'<input type="%s" name="wcca_%s" id="wcca_%s" value="%s" %s>',
+					$type,
+					$option,
+					$option,
+					$default_value,
+					$required ? 'required' : ''
+				);
 				break;
 			case 'textarea':
 				$default_value = $_REQUEST[ 'wcca_' . $option ] ?? get_post_meta( get_the_ID(), 'wcca_' . $option, true ) ?: null;
@@ -144,6 +153,13 @@ class WCCA_Admin {
 				throw new Exception( sprintf( __( 'Unrecognized option field of type %s.' ), $type ) );
 		}
 
-		printf( '<div class="wcca-field"><label class="wcca-label" for="wcca_%s">%s</label><div class="wcca-input wcca-input-%s">%s</div></div>', $option, $label, $type, $html );
+		printf(
+			'<div class="wcca-field"><label class="wcca-label" for="wcca_%s">%s%s</label><div class="wcca-input wcca-input-%s">%s</div></div>',
+			$option,
+			$label,
+			$required ? '&nbsp;<sup>*</sup>' : '',
+			$type,
+			$html
+		);
 	}
 }

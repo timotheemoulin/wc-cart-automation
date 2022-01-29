@@ -12,7 +12,10 @@ class Cpt_Automation {
 	private static array $fields = [];
 
 	public function __construct() {
-		static::add_field( 'token', __( 'Unique token' ) );
+		static::add_field( 'token', __( 'Unique token' ), 'text', [
+			'required' => true,
+		] );
+
 		static::add_field( 'products', __( 'Products to add' ), 'select2', [
 			'post_type' => 'product',
 			'single'    => false,
