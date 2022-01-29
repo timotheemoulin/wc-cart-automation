@@ -45,6 +45,7 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 = 0.1.1 =
 * Stats card on the dashboard screen
+* Stats for every cart in the admin list
 
 = 0.1.0 =
 * Initial version
