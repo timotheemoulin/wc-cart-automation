@@ -1,16 +1,35 @@
 .wcca-field {
 	display: flex;
-	align-items: center;
+	align-items: start;
+	margin: 1rem 0;
 
-	label {
+	.wcca-label {
 		font-weight: bold;
 		flex-basis: 30%;
+	}
 
-		& + input {
-			flex-grow: 1;
+	.wcca-input {
+		flex-grow: 1;
+
+		> * {
+			width: 100%;
 		}
 
-		& + textarea {
+		&-checkbox {
+			display: block;
+			overflow: auto;
+			padding: 0.5em 0;
+
+			> * {
+				float: left;
+			}
+
+			input {
+				clear: both;
+			}
+		}
+
+		&-textarea {
 			flex-basis: 100%;
 			flex-shrink: 0;
 		}

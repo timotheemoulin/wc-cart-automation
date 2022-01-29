@@ -13,6 +13,10 @@ class Cpt_Automation {
 
 	public function __construct() {
 		static::add_field( 'token', __( 'Unique token' ) );
+		static::add_field( 'products', __( 'Products to add' ), 'select2', [
+			'post_type' => 'product',
+			'single'    => false,
+		] );
 
 		// WCCA Custom Post Type
 		add_action( 'init', [ __CLASS__, 'register_cpt' ] );
@@ -24,14 +28,14 @@ class Cpt_Automation {
 	 * @param string $option
 	 * @param string $label
 	 * @param string $type
-	 * @param mixed  $default
+	 * @param array  $args
 	 */
-	private static function add_field( string $option, string $label, string $type = 'text', $default = '' ): void {
+	private static function add_field( string $option, string $label, string $type = 'text', array $args = [] ): void {
 		self::$fields[ $option ] = [
-			'name'    => $option,
-			'label'   => $label,
-			'type'    => $type,
-			'default' => $default,
+			'name'  => $option,
+			'label' => $label,
+			'type'  => $type,
+			'args'  => $args,
 		];
 	}
 
@@ -44,7 +48,14 @@ class Cpt_Automation {
 	 */
 	public static function save_post( int $post_ID, WP_Post $post, bool $update ): void {
 		foreach ( static::$fields as $field => $data ) {
-			update_post_meta( $post_ID, 'wcca_' . $field, esc_html( $_REQUEST[ 'wcca_' . $field ] ?? null ) );
+			if ( $data[ 'args' ][ 'single' ] ?? true ) {
+				update_post_meta( $post_ID, 'wcca_' . $field, esc_html( $_REQUEST[ 'wcca_' . $field ] ?? null ) );
+			} else {
+				delete_post_meta( $post_ID, 'wcca_' . $field );
+				foreach ( $_REQUEST[ 'wcca_' . $field ] ?? [] as $key => $value ) {
+					add_post_meta( $post_ID, 'wcca_' . $field, esc_html( $value ) );
+				}
+			}
 		}
 	}
 
@@ -89,7 +100,7 @@ class Cpt_Automation {
 	 */
 	public static function render_meta_box_fields() {
 		foreach ( static::$fields as $field ) {
-			WCCA_Admin::the_custom_field_admin( $field[ 'name' ], $field[ 'label' ], $field[ 'type' ], $field[ 'default' ] );
+			WCCA_Admin::the_custom_field_admin( $field[ 'name' ], $field[ 'label' ], $field[ 'type' ], $field[ 'args' ] );
 		}
 	}
 

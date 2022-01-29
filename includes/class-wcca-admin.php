@@ -56,29 +56,94 @@ class WCCA_Admin {
 	 * @param string $option
 	 * @param string $label
 	 * @param string $type
-	 * @param mixed  $default
-	 * @param bool   $single
+	 * @param array  $args
 	 *
 	 * @throws Exception
 	 */
-	public static function the_custom_field_admin( string $option, string $label, string $type = 'text', $default = '', bool $single = true ): void {
-		$value = $_REQUEST[ 'wcca_' . $option ] ?? get_post_meta( get_the_ID(), 'wcca_' . $option, $single ) ?: $default;
-
+	public static function the_custom_field_admin( string $option, string $label, string $type = 'text', array $args = [] ): void {
 		switch ( $type ) {
 			case 'text':
 			case 'url':
 			case 'phone':
 			case 'email':
 			case 'number':
-				$html = sprintf( '<input type="%s" name="wcca_%s" id="wcca_%s" value="%s">', $type, $option, $option, $value );
+				$default_value = $_REQUEST[ 'wcca_' . $option ] ?? get_post_meta( get_the_ID(), 'wcca_' . $option, true ) ?: null;
+
+				$html = sprintf( '<input type="%s" name="wcca_%s" id="wcca_%s" value="%s">', $type, $option, $option, $default_value );
 				break;
 			case 'textarea':
-				$html = sprintf( '<textarea name="wcca_%s">%s</textarea>', $option, $value );
+				$default_value = $_REQUEST[ 'wcca_' . $option ] ?? get_post_meta( get_the_ID(), 'wcca_' . $option, true ) ?: null;
+
+				$html = sprintf( '<textarea name="wcca_%s">%s</textarea>', $option, $default_value );
+				break;
+			case 'checkbox':
+			case 'select':
+			case 'select2':
+				$single        = $args[ 'single' ] ?? true;
+				$default_value = $_REQUEST[ 'wcca_' . $option ] ?? get_post_meta( get_the_ID(), 'wcca_' . $option, $single ) ?: [];
+
+				if ( $post_type = $args[ 'post_type' ] ?? null ) {
+					$query   = new WP_Query( [
+						'post_type'           => $post_type,
+						'limit'               => - 1,
+						'post_status__not_in' => [ 'trash' ],
+					] );
+					$choices = [];
+					foreach ( $query->posts as $product ) {
+						$choices[ $product->ID ] = $product->post_title;
+					}
+				} else {
+					$choices = $args[ 'choices' ] ?? [];
+				}
+
+				$html = '';
+				if ( 'checkbox' === $type ) {
+					foreach ( $choices as $key => $value ) {
+						$selected = in_array( $key, (array) $default_value );
+						$html     .= sprintf(
+							'<input type="checkbox" name="wcca_%s%s%s" id="wcca_%s_%s" value="%s" %s><label for="wcca_%s_%s">%s</label>',
+							$single ? '' : '[',
+							$option,
+							$single ? '' : ']',
+							$option,
+							$key,
+							$key,
+							( $selected ? 'checked' : '' ),
+							$option,
+							$key,
+							$value
+						);
+					}
+				} else {
+					$html .= sprintf( '<select name="wcca_%s%s" id="wcca_%s" %s %s>',
+						$option,
+						$single ? '' : '[]',
+						$option,
+						( $args[ 'required' ] ?? false ) ? 'required' : '',
+						$single ? '' : 'multiple'
+					);
+
+					if ( $single ) {
+						$html .= '<option>' . __( 'Select a product', WCCA_PLUGIN_NAME ) . '</option>';
+					}
+
+					foreach ( $choices as $key => $value ) {
+						$selected = in_array( $key, (array) $default_value );
+						$html     .= sprintf(
+							'<option value="%s" %s>%s</option>',
+							$key,
+							( $selected ? 'selected' : '' ),
+							$value
+						);
+					}
+
+					$html .= '</select>';
+				}
 				break;
 			default:
 				throw new Exception( sprintf( __( 'Unrecognized option field of type %s.' ), $type ) );
 		}
 
-		printf( '<div class="wcca-field"><label for="wcca_%s">%s</label>%s</div>', $option, $label, $html );
+		printf( '<div class="wcca-field"><label class="wcca-label" for="wcca_%s">%s</label><div class="wcca-input wcca-input-%s">%s</div></div>', $option, $label, $type, $html );
 	}
 }
