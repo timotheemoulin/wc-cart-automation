@@ -34,6 +34,11 @@ No, and it never will be.
 
 ## Changelog ##
 
+### 0.1.2 ###
+
+* Remove unused files for the plugin archive
+* Sanitize inputs
+
 ### 0.1.1 ###
 
 * Stats card on the dashboard screen
