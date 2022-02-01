@@ -68,13 +68,13 @@ class WCCA_Admin {
 		printf( '<h1>%s</h1>', __( 'Cart Automation configuration', WCCA_PLUGIN_NAME ) );
 
 		$active = ( new WP_Query( [ 'post_type' => 'wcca', 'post_status' => 'publish' ] ) )->post_count;
-		printf( '<p>' . _n( 'Active automation : %s', WCCA_PLUGIN_NAME, $active ) . '</p>', $active );
+		printf( '<p>' . _n( 'Active automation : %s', 'Active automations : %s', $active, WCCA_PLUGIN_NAME ) . '</p>', $active );
 
 		$stati = get_post_stati();
 		unset( $stati[ 'auto-draft' ], $stati[ 'revision' ], $stati[ 'publish' ] );
 		$inactive = ( new WP_Query( [ 'post_type' => 'wcca', 'post_status' => $stati ] ) )->post_count;
 
-		printf( '<p>' . _n( 'Inactive automation : %s', WCCA_PLUGIN_NAME, $inactive ) . '</p>', $inactive );
+		printf( '<p>' . _n( 'Inactive automation : %s', 'Inactive automations : %s', $inactive, WCCA_PLUGIN_NAME ) . '</p>', $inactive );
 
 		printf( '<p><a href="%s">%s</a></p>', admin_url( 'edit.php?post_type=wcca' ), __( 'View Automations', WCCA_PLUGIN_NAME ) );
 	}
