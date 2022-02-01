@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name:     Woocommerce Cart Automation
- * Plugin URI:      https://github.com/timotheemoulin/wp-cart-automation
- * Description:     Enhance your sales with custom cart automation process linked to your .
+ * Plugin Name:     Shop Cart Automation
+ * Plugin URI:      https://github.com/timotheemoulin/wc-cart-automation
+ * Description:     Enhance your sales with custom cart automation process.
  * Author:          Timothée Moulin
  * Author URI:      https://github.com/timotheemoulin
  * Text Domain:     wc-cart-automation
@@ -21,6 +21,10 @@ if ( ! defined( 'WCCA_PLUGIN_FILE' ) ) {
 if ( ! defined( 'WCCA_PLUGIN_NAME' ) ) {
 	define( 'WCCA_PLUGIN_NAME', 'wc-cart-automation' );
 }
+
+// Just register translations for the plugin data
+__( 'Shop Cart Automation', WCCA_PLUGIN_NAME );
+__( 'Enhance your sales with custom cart automation process.', WCCA_PLUGIN_NAME );
 
 // Include the autoloader.
 include_once dirname( WCCA_PLUGIN_FILE ) . '/includes/autoloader.php';

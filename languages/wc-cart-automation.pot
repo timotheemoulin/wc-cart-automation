@@ -142,7 +142,7 @@ msgid "Woocommerce Cart Automation"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
-msgid "https://github.com/timotheemoulin/wp-cart-automation"
+msgid "https://github.com/timotheemoulin/wc-cart-automation"
 msgstr ""
 
 #. Description of the plugin/theme
