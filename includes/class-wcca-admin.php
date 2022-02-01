@@ -97,6 +97,7 @@ class WCCA_Admin {
 			case 'email':
 			case 'number':
 				$default_value = $_REQUEST[ 'wcca_' . $option ] ?? get_post_meta( get_the_ID(), 'wcca_' . $option, true ) ?: null;
+				$default_value = esc_attr( $default_value );
 
 				$html = sprintf(
 					'<input type="%s" name="wcca_%s" id="wcca_%s" value="%s" %s>',
@@ -109,6 +110,7 @@ class WCCA_Admin {
 				break;
 			case 'textarea':
 				$default_value = $_REQUEST[ 'wcca_' . $option ] ?? get_post_meta( get_the_ID(), 'wcca_' . $option, true ) ?: null;
+				$default_value = esc_attr( $default_value );
 
 				$html = sprintf( '<textarea name="wcca_%s">%s</textarea>', $option, $default_value );
 				break;
@@ -118,6 +120,7 @@ class WCCA_Admin {
 			case 'select2':
 				$single        = $args[ 'single' ] ?? true;
 				$default_value = $_REQUEST[ 'wcca_' . $option ] ?? get_post_meta( get_the_ID(), 'wcca_' . $option, $single );
+				$default_value = esc_attr( $default_value );
 
 				if ( $post_type = $args[ 'post_type' ] ?? null ) {
 					$query   = new WP_Query( [
