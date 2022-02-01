@@ -218,11 +218,11 @@ class Cpt_Automation {
 	public static function save_post( int $wcca_ID ): void {
 		foreach ( static::$fields as $field => $data ) {
 			if ( $data[ 'args' ][ 'single' ] ?? true ) {
-				update_post_meta( $wcca_ID, 'wcca_' . $field, esc_html( $_REQUEST[ 'wcca_' . $field ] ?? null ) );
+				update_post_meta( $wcca_ID, 'wcca_' . $field, sanitize_text_field( $_REQUEST[ 'wcca_' . $field ] ?? null ) );
 			} else {
 				delete_post_meta( $wcca_ID, 'wcca_' . $field );
 				foreach ( $_REQUEST[ 'wcca_' . $field ] ?? [] as $value ) {
-					add_post_meta( $wcca_ID, 'wcca_' . $field, esc_html( $value ) );
+					add_post_meta( $wcca_ID, 'wcca_' . $field, sanitize_text_field( $value ) );
 				}
 			}
 		}
