@@ -44,6 +44,10 @@ are also summed for you.
 
 == Changelog ==
 
+= 0.2.0 =
+* Allow selecting multiple products with different quantities
+* Allow selecting product variations
+
 = 0.1.2 =
 * Remove unused files for the plugin archive
 * Sanitize inputs
