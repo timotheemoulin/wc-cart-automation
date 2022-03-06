@@ -1,0 +1,167 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: wc-cart-automation\n"
+"Language: en\n"
+
+#: includes/class-cpt-automation.php:40
+msgid "Unique token"
+msgstr "Jeton unique"
+
+#: includes/class-cpt-automation.php:44
+msgid "Merge with the user's cart"
+msgstr "Fusionner avec le panier de l'utilisateur"
+
+#: includes/class-cpt-automation.php:46
+msgid "Erase current cart"
+msgstr "Effacer le panier actuel"
+
+#: includes/class-cpt-automation.php:47
+msgid "Merge both carts"
+msgstr "Fusionner les deux paniers"
+
+#: includes/class-cpt-automation.php:51
+msgid "Products to add"
+msgstr "Produits à ajouter"
+
+#: includes/class-cpt-automation.php:56
+msgid "Coupons to add"
+msgstr "Coupons à ajouter"
+
+#: includes/class-cpt-automation.php:143
+msgid "The link you followed was not valid. Please try to copy/paste it in your browser."
+msgstr "Le lien que vous avez suivi n'était pas valide. Veuillez essayer de le copier/coller dans votre navigateur."
+
+#: includes/class-cpt-automation.php:206
+msgid "Your cart has been successfully updated."
+msgstr "Votre panier a été mis à jour avec succès."
+
+#: includes/class-cpt-automation.php:240
+msgid "Add New Automation"
+msgstr "Ajouter une nouvelle automatisation"
+
+#: includes/class-cpt-automation.php:241
+msgid "Edit Automation"
+msgstr "Modifier l'automatisation"
+
+#: includes/class-cpt-automation.php:242
+msgid "New Automation"
+msgstr "Nouvelle automatisation"
+
+#: includes/class-cpt-automation.php:243
+msgid "View Automation"
+msgstr "Afficher l'automatisation"
+
+#: includes/class-cpt-automation.php:244 includes/class-wcca-admin.php:79
+msgid "View Automations"
+msgstr "Afficher les automatisations"
+
+#: includes/class-cpt-automation.php:245
+msgid "Search Automations"
+msgstr "Automatisations de recherche"
+
+#: includes/class-cpt-automation.php:246
+msgid "No automations found."
+msgstr "Aucune automatisation trouvée."
+
+#: includes/class-cpt-automation.php:247
+msgid "No automations found in Trash."
+msgstr "Aucune automatisation trouvée dans la corbeille."
+
+#: includes/class-cpt-automation.php:248
+msgid "Automations"
+msgstr "Automatisations"
+
+#: includes/class-cpt-automation.php:268
+msgid "Configuration"
+msgstr "Configuration"
+
+#: includes/class-cpt-automation.php:295
+msgid "Anyone clicking on this link will activate the cart automation."
+msgstr "Toute personne cliquant sur ce lien activera l'automatisation du panier."
+
+#: includes/class-cpt-automation.php:302
+msgid "Be careful, your link will only work at : %s"
+msgstr "Attention, votre lien ne fonctionnera qu'à : %s"
+
+#: includes/class-cpt-automation.php:306
+msgid "You must first publish this page to enable the link. Clicking on a disable link will not work."
+msgstr "Vous devez d'abord publier cette page pour activer le lien. Cliquer sur un lien de désactivation ne fonctionnera pas."
+
+#: includes/class-wcca-admin.php:39
+msgid "Openings"
+msgstr "Ouvertures"
+
+#: includes/class-wcca-admin.php:40
+msgid "Orders"
+msgstr "Commandes"
+
+#: includes/class-wcca-admin.php:56
+msgid "Cart automation"
+msgstr "Automatisation du panier"
+
+#: includes/class-wcca-admin.php:68
+msgid "Cart Automation configuration"
+msgstr "Configuration de l'automatisation du panier"
+
+#: includes/class-wcca-admin.php:171
+msgid "- Select -"
+msgstr "- Sélectionnez -"
+
+#: includes/class-wcca-admin.php:188
+msgid "Unrecognized option field of type %s."
+msgstr "Champ d'option non reconnu de type %s."
+
+#. Plugin Name of the plugin/theme
+#: 
+msgid "Woocommerce Cart Automation"
+msgstr "Automatisation du panier Woocommerce"
+
+#. Plugin URI of the plugin/theme
+#: 
+msgid "https://github.com/timotheemoulin/wc-cart-automation"
+msgstr "https://github.com/timotheemoulin/wc-cart-automation"
+
+#. Description of the plugin/theme
+#: 
+msgid "Enhance your sales with custom cart automation process linked to your ."
+msgstr "Améliorez vos ventes avec un processus d'automatisation de panier personnalisé lié à votre ."
+
+#. Author of the plugin/theme
+#: 
+msgid "Timothée Moulin"
+msgstr "Timothée Moulin"
+
+#. Author URI of the plugin/theme
+#: 
+msgid "https://github.com/timotheemoulin"
+msgstr "https://github.com/timotheemoulin"
+
+#: includes/class-cpt-automation.php:237
+msgctxt "post type general name"
+msgid "Automations"
+msgstr "Automatisations"
+
+#: includes/class-cpt-automation.php:238
+msgctxt "post type singular name"
+msgid "Automation"
+msgstr "Automatisation"
+
+#: includes/class-cpt-automation.php:239
+msgctxt "automation"
+msgid "Add New"
+msgstr "Ajouter nouveau"
+
+#: includes/class-wcca-admin.php:28
+msgctxt "unique"
+msgid "<span title=\"unique %s\">u : %s</span>"
+msgstr "<span title=\"unique %s\">u : %s</span>"
+
+#: includes/class-wcca-admin.php:31
+msgctxt "all"
+msgid "<span title=\"all %s\">a : %s</span>"
+msgstr "<span title=\"all %s\">a : %s</span>"
+
