@@ -44,6 +44,9 @@ are also summed for you.
 
 == Changelog ==
 
+= 0.2.1 =
+* Add French translations
+
 = 0.2.0 =
 * Allow selecting multiple products with different quantities
 * Allow selecting product variations
