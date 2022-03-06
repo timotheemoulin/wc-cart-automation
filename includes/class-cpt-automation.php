@@ -48,9 +48,23 @@ class Cpt_Automation {
 			],
 		] );
 
-		static::add_field( 'products', __( 'Products to add', WCCA_PLUGIN_NAME ), 'select2', [
-			'post_type' => 'product',
-			'single'    => false,
+		static::add_field( 'products', __( 'Products to add', WCCA_PLUGIN_NAME ), 'repeater', [
+			'sub_fields' => [
+				[
+					'option' => 'quantity',
+					'label'  => __( 'Quantity', WCCA_PLUGIN_NAME ),
+					'type'   => 'number',
+				],
+				[
+					'option' => 'product',
+					'label'  => __( 'Product', WCCA_PLUGIN_NAME ),
+					'type'   => 'select2',
+					'args'   => [
+						'post_type' => 'product',
+						'single'    => false,
+					],
+				],
+			],
 		] );
 
 		static::add_field( 'coupons', __( 'Coupons to add', WCCA_PLUGIN_NAME ), 'select2', [
@@ -63,7 +77,7 @@ class Cpt_Automation {
 	 * @param string $option
 	 * @param string $label
 	 * @param string $type
-	 * @param array  $args
+	 * @param array $args
 	 */
 	private static function add_field( string $option, string $label, string $type = 'text', array $args = [] ): void {
 		self::$fields[ $option ] = [
@@ -97,11 +111,11 @@ class Cpt_Automation {
 		if ( $cart ) {
 			// ensure that the cart is loaded
 			WC()->cart->get_cart();
-			foreach ( $cart[ 'content' ] as $product ) {
+			foreach ( $cart['content'] as $product ) {
 				WC()->cart->add_to_cart( $product );
 			}
 
-			foreach ( $cart[ 'coupons' ] as $coupon ) {
+			foreach ( $cart['coupons'] as $coupon ) {
 				if ( $the_coupon = new WC_Coupon( $coupon ) ) {
 					WC()->cart->apply_coupon( $the_coupon->get_code() );
 				}
@@ -115,7 +129,7 @@ class Cpt_Automation {
 	 * @throws Exception
 	 */
 	public static function woocommerce_init(): void {
-		if ( ! ( $wcca = $_REQUEST[ 'wcca' ] ?? null ) ) {
+		if ( ! ( $wcca = $_REQUEST['wcca'] ?? null ) ) {
 			// bail early if there is no wcca code in the URL
 			return;
 		}
@@ -191,11 +205,11 @@ class Cpt_Automation {
 
 		wcca()->add_customer_wcca_opening( $wcca_ID );
 
-		foreach ( $wcca[ 'wcca_products' ] as $product ) {
+		foreach ( $wcca['wcca_products'] as $product ) {
 			WC()->cart->add_to_cart( $product );
 		}
 
-		foreach ( $wcca[ 'wcca_coupons' ] as $coupon ) {
+		foreach ( $wcca['wcca_coupons'] as $coupon ) {
 			if ( $the_coupon = new WC_Coupon( $coupon ) ) {
 				WC()->cart->apply_coupon( $the_coupon->get_code() );
 			}
@@ -217,7 +231,31 @@ class Cpt_Automation {
 	 */
 	public static function save_post( int $wcca_ID ): void {
 		foreach ( static::$fields as $field => $data ) {
-			if ( $data[ 'args' ][ 'single' ] ?? true ) {
+			if ( ! empty( $data['args']['sub_fields'] ?? [] ) ) {
+				/*$sub_fields = [];
+				foreach ( $_REQUEST[ 'wcca_' . $field ] ?? [] as $row_index => $row_values ) {
+					foreach ( $data['args']['sub_fields'] as $key => $sub_field ) {
+						$a = 0;
+					}
+				}*/
+				// store all the repeater values in the same repeater meta
+				$sanitized_values = [];
+				foreach ( $_REQUEST[ 'wcca_' . $field ] ?? [] as $row_id => $row ) {
+					if ( $row_id < 0 ) {
+						continue;
+					}
+					foreach ( $row as $key => $value ) {
+						if ( is_array( $value ) ) {
+							$row[ $key ] = array_map( 'sanitize_text_field', $value );
+						} else {
+							$row[ $key ] = sanitize_text_field( $value );
+						}
+					}
+					$sanitized_values[] = $row;
+				}
+
+				update_post_meta( $wcca_ID, 'wcca_' . $field, $sanitized_values );
+			} elseif ( $data['args']['single'] ?? true ) {
 				update_post_meta( $wcca_ID, 'wcca_' . $field, sanitize_text_field( $_REQUEST[ 'wcca_' . $field ] ?? null ) );
 			} else {
 				delete_post_meta( $wcca_ID, 'wcca_' . $field );
@@ -273,7 +311,7 @@ class Cpt_Automation {
 	 */
 	public static function render_meta_box_fields() {
 		foreach ( static::$fields as $field ) {
-			WCCA_Admin::the_custom_field_admin( $field[ 'name' ], $field[ 'label' ], $field[ 'type' ], $field[ 'args' ] );
+			WCCA_Admin::the_custom_field_admin( $field['name'], $field['label'], $field['type'], $field['args'] );
 		}
 	}
 

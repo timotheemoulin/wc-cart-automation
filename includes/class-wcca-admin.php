@@ -29,19 +29,18 @@ class WCCA_Admin {
 			echo ' / ';
 			$count = count( $openings, COUNT_RECURSIVE );
 			printf( _x( '<span title="all %s">a : %s</span>', 'all', WCCA_PLUGIN_NAME ), $count, $count );
-		} else if ( 'orders' === $column ) {
+		} elseif ( 'orders' === $column ) {
 			$orders = get_option( 'wcca_orders_' . $post_id, [] );
 			echo count( $orders );
 		}
 	}
 
 	public static function manage_wcca_posts_columns( array $columns ): array {
-		$columns[ 'openings' ] = __( 'Openings', WCCA_PLUGIN_NAME );
-		$columns[ 'orders' ]   = __( 'Orders', WCCA_PLUGIN_NAME );
+		$columns['openings'] = __( 'Openings', WCCA_PLUGIN_NAME );
+		$columns['orders']   = __( 'Orders', WCCA_PLUGIN_NAME );
 
 		return $columns;
 	}
-
 
 	/**
 	 * Enqueue the admin styles.
@@ -71,7 +70,7 @@ class WCCA_Admin {
 		printf( '<p>' . _n( 'Active automation : %s', 'Active automations : %s', $active, WCCA_PLUGIN_NAME ) . '</p>', $active );
 
 		$stati = get_post_stati();
-		unset( $stati[ 'auto-draft' ], $stati[ 'revision' ], $stati[ 'publish' ] );
+		unset( $stati['auto-draft'], $stati['revision'], $stati['publish'] );
 		$inactive = ( new WP_Query( [ 'post_type' => 'wcca', 'post_status' => $stati ] ) )->post_count;
 
 		printf( '<p>' . _n( 'Inactive automation : %s', 'Inactive automations : %s', $inactive, WCCA_PLUGIN_NAME ) . '</p>', $inactive );
@@ -83,20 +82,48 @@ class WCCA_Admin {
 	 * @param string $option
 	 * @param string $label
 	 * @param string $type
-	 * @param array  $args
+	 * @param array $args
 	 *
 	 * @throws Exception
 	 */
 	public static function the_custom_field_admin( string $option, string $label, string $type = 'text', array $args = [] ): void {
-		$required = $args[ 'required' ] ?? false;
+		$required      = $args['required'] ?? false;
+		$single        = $args['single'] ?? true;
+		$default_value = $args['default_value'] ?? $_REQUEST[ 'wcca_' . $option ] ?? get_post_meta( get_the_ID(), 'wcca_' . $option, $single ) ?: null;
 
 		switch ( $type ) {
+			case 'repeater':
+				// register the repeater JS
+				wp_enqueue_script( WCCA_PLUGIN_NAME . '-admin', plugin_dir_url( WCCA_PLUGIN_FILE ) . '/js/wcca_admin.js' );
+
+				// get the repeated values
+				$repeater_values = get_post_meta( get_the_ID(), 'wcca_' . $option, true );
+				$repeater_count  = count( $repeater_values ) ?: 1;
+				ob_start();
+				// create every repeater row
+				for ( $repeater_key = -1; $repeater_key < $repeater_count; $repeater_key ++ ) {
+					printf( '<div class="repeater-row" style="display:%s;">', $repeater_key === -1 ? 'none' : 'block' );
+					foreach ( $args['sub_fields'] as $sub_field ) {
+						$sub_field['args']                  = $sub_field['args'] ?? [];
+						$sub_field['args']['default_value'] = $repeater_values[ $repeater_key ][ $sub_field['option'] ] ?? null;
+						WCCA_Admin::the_custom_field_admin( $option . '[' . $repeater_key . ']' . '[' . $sub_field['option'] . ']', $sub_field['label'], $sub_field['type'], $sub_field['args'] );
+					}
+					printf( '<a href="#" class="delete_current_row">%s</a>', __( 'Delete', WCCA_PLUGIN_NAME ) );
+					echo '<hr>';
+					echo '</div>';
+				}
+
+				// insert the "add row" button
+				printf( '<a href="#" class="add_row">%s</a>', __( 'Add', WCCA_PLUGIN_NAME ) );
+
+				$html = ob_get_clean();
+
+				break;
 			case 'text':
 			case 'url':
 			case 'phone':
 			case 'email':
 			case 'number':
-				$default_value = $_REQUEST[ 'wcca_' . $option ] ?? get_post_meta( get_the_ID(), 'wcca_' . $option, true ) ?: null;
 				$default_value = esc_attr( $default_value );
 
 				$html = sprintf(
@@ -109,7 +136,6 @@ class WCCA_Admin {
 				);
 				break;
 			case 'textarea':
-				$default_value = $_REQUEST[ 'wcca_' . $option ] ?? get_post_meta( get_the_ID(), 'wcca_' . $option, true ) ?: null;
 				$default_value = esc_attr( $default_value );
 
 				$html = sprintf( '<textarea name="wcca_%s">%s</textarea>', $option, $default_value );
@@ -118,11 +144,13 @@ class WCCA_Admin {
 			case 'checkbox':
 			case 'select':
 			case 'select2':
-				$single        = $args[ 'single' ] ?? true;
-				$default_value = $_REQUEST[ 'wcca_' . $option ] ?? get_post_meta( get_the_ID(), 'wcca_' . $option, $single );
-				$default_value = esc_attr( $default_value );
+				if ( is_array( $default_value ) ) {
+					$default_value = array_map( 'esc_attr', $default_value );
+				} else {
+					$default_value = esc_attr( $default_value );
+				}
 
-				if ( $post_type = $args[ 'post_type' ] ?? null ) {
+				if ( $post_type = $args['post_type'] ?? null ) {
 					$query   = new WP_Query( [
 						'post_type'           => $post_type,
 						'limit'               => - 1,
@@ -133,7 +161,7 @@ class WCCA_Admin {
 						$choices[ $product->ID ] = $product->post_title;
 					}
 				} else {
-					$choices = $args[ 'choices' ] ?? [];
+					$choices = $args['choices'] ?? [];
 				}
 
 				$html = '';
@@ -166,7 +194,7 @@ class WCCA_Admin {
 						$option,
 						$single ? '' : '[]',
 						$option,
-						( $args[ 'required' ] ?? false ) ? 'required' : '',
+						( $args['required'] ?? false ) ? 'required' : '',
 						$single ? '' : 'multiple'
 					);
 
