@@ -3,6 +3,7 @@
 namespace WCCA;
 
 use Exception;
+use WP_Post;
 use WP_Query;
 
 /**
@@ -101,8 +102,8 @@ class WCCA_Admin {
 				$repeater_count  = count( $repeater_values ) ?: 1;
 				ob_start();
 				// create every repeater row
-				for ( $repeater_key = -1; $repeater_key < $repeater_count; $repeater_key ++ ) {
-					printf( '<div class="repeater-row" style="display:%s;">', $repeater_key === -1 ? 'none' : 'block' );
+				for ( $repeater_key = - 1; $repeater_key < $repeater_count; $repeater_key ++ ) {
+					printf( '<div class="repeater-row" style="display:%s;">', $repeater_key === - 1 ? 'none' : 'block' );
 					foreach ( $args['sub_fields'] as $sub_field ) {
 						$sub_field['args']                  = $sub_field['args'] ?? [];
 						$sub_field['args']['default_value'] = $repeater_values[ $repeater_key ][ $sub_field['option'] ] ?? null;
@@ -150,15 +151,35 @@ class WCCA_Admin {
 					$default_value = esc_attr( $default_value );
 				}
 
+				$opt_groups = [];
+
 				if ( $post_type = $args['post_type'] ?? null ) {
 					$query   = new WP_Query( [
 						'post_type'           => $post_type,
-						'limit'               => - 1,
+						'posts_per_page'      => - 1,
 						'post_status__not_in' => [ 'trash' ],
+						'order'               => 'ASC',
+						'orderby'             => 'title',
 					] );
 					$choices = [];
-					foreach ( $query->posts as $product ) {
-						$choices[ $product->ID ] = $product->post_title;
+
+					foreach ( $query->posts as $post ) {
+						if ( 'product' === $post->post_type ) {
+							$wc_product = wc_get_product( $post );
+							if ( $wc_product->is_type( 'simple' ) ) {
+								$choices[ $wc_product->get_id() ] = $wc_product->get_title();
+							} elseif ( $wc_product->is_type( 'variable' ) ) {
+								$choices[ $wc_product->get_id() ] = $wc_product->get_name();
+
+								foreach ( $wc_product->get_available_variations() as $variation ) {
+									$variation                          = wc_get_product( $variation['variation_id'] );
+									$opt_groups[ $variation->get_id() ] = $wc_product->get_id();
+									$choices[ $variation->get_id() ]    = $variation->get_name();
+								}
+							}
+						} elseif ( $post instanceof WP_Post ) {
+							$choices[ $post->ID ] = $post->post_title;
+						}
 					}
 				} else {
 					$choices = $args['choices'] ?? [];
@@ -204,12 +225,25 @@ class WCCA_Admin {
 
 					foreach ( $choices as $key => $value ) {
 						$selected = in_array( $key, (array) $default_value );
-						$html     .= sprintf(
-							'<option value="%s" %s>%s</option>',
-							$key,
-							( $selected ? 'selected' : '' ),
-							$value
-						);
+						if ( in_array( $key, $opt_groups ) ) {
+							// open the option group
+							$html .= sprintf(
+								'<optgroup label="%s">',
+								$value,
+							);
+						} else {
+							// close the option group if the current option is not in a group
+							if ( ! array_key_exists( $key, $opt_groups ) ) {
+								$html .= '</optgroup>';
+							}
+
+							$html .= sprintf(
+								'<option value="%s" %s>%s</option>',
+								$key,
+								( $selected ? 'selected' : '' ),
+								$value
+							);
+						}
 					}
 
 					$html .= '</select>';

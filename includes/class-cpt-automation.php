@@ -61,7 +61,7 @@ class Cpt_Automation {
 					'type'   => 'select2',
 					'args'   => [
 						'post_type' => 'product',
-						'single'    => false,
+						'single'    => true,
 					],
 				],
 			],
@@ -182,8 +182,6 @@ class Cpt_Automation {
 			$wcca_ID = $wcca_ID->ID;
 		}
 
-		$wcca = get_post_meta( $wcca_ID );
-
 		// ensure that the cart is loaded
 		WC()->cart->get_cart();
 
@@ -205,11 +203,21 @@ class Cpt_Automation {
 
 		wcca()->add_customer_wcca_opening( $wcca_ID );
 
-		foreach ( $wcca['wcca_products'] as $product ) {
-			WC()->cart->add_to_cart( $product );
+		foreach ( get_post_meta( $wcca_ID, 'wcca_products', true ) as $product ) {
+			if ( is_scalar( $product ) ) {
+				// store only the product with quantity 1 (early version of the plugin)
+				WC()->cart->add_to_cart( $product );
+			} else {
+				$wc_product = wc_get_product( $product['product'] );
+				if ( $wc_product->is_type( 'simple' ) ) {
+					WC()->cart->add_to_cart( $wc_product->get_id(), $product['quantity'] ?? 1 );
+				} elseif ( $wc_product->is_type( 'variation' ) ) {
+					WC()->cart->add_to_cart( $wc_product->get_parent_id(), $product['quantity'] ?? 1, $wc_product->get_id() );
+				}
+			}
 		}
 
-		foreach ( $wcca['wcca_coupons'] as $coupon ) {
+		foreach ( get_post_meta( $wcca_ID, 'wcca_coupons' ) as $coupon ) {
 			if ( $the_coupon = new WC_Coupon( $coupon ) ) {
 				WC()->cart->apply_coupon( $the_coupon->get_code() );
 			}

@@ -71,14 +71,21 @@ class WCCA {
 	 */
 	public function add_customer_wcca_opening( ?int $wcca_ID = null ) {
 		if ( empty( $wcca_ID ) ) {
-			if ( empty( $wcca_ID = ( $_COOKIE[ 'wcca' ] ?? null ) ) ) {
+			if ( empty( $wcca_ID = ( $_COOKIE['wcca'] ?? null ) ) ) {
 				// something wrong happened and the trace of the user has been lost
 				return;
 			}
 		}
 
 		$openings = get_option( 'wcca_openings_' . $wcca_ID, [] );
-		if ( empty( $current_user = WC()->session->get_customer_unique_id() ) ) {
+
+		if ( method_exists( WC()->session, 'get_customer_unique_id' ) ) {
+			$current_user = WC()->session->get_customer_unique_id();
+		} else {
+			$current_user = WC()->session->get_customer_id();
+		}
+
+		if ( empty( $current_user ) ) {
 			// we should not get here, but just in case, consider that is some anonymous visitor
 			$current_user = 0;
 		}
@@ -87,7 +94,7 @@ class WCCA {
 		$openings[ $current_user ][] = time();
 
 		setcookie( 'wcca', $wcca_ID );
-		$_COOKIE[ 'wcca' ] = $wcca_ID;
+		$_COOKIE['wcca'] = $wcca_ID;
 
 		update_option( 'wcca_openings_' . $wcca_ID, $openings );
 	}
@@ -96,18 +103,18 @@ class WCCA {
 	 * Add the current order to the list of orders.
 	 *
 	 * @param WC_Order|null $order
-	 * @param ?int          $wcca_ID
+	 * @param ?int $wcca_ID
 	 */
 	public function add_order_to_wcca( WC_Order $order = null, ?int $wcca_ID = null ) {
 		if ( empty( $wcca_ID ) ) {
-			if ( empty( $wcca_ID = ( $_COOKIE[ 'wcca' ] ?? null ) ) ) {
+			if ( empty( $wcca_ID = ( $_COOKIE['wcca'] ?? null ) ) ) {
 				// something wrong happened and the trace of the user has been lost
 				return;
 			}
 		}
 
 		setcookie( 'wcca', null );
-		$_COOKIE[ 'wcca' ] = null;
+		$_COOKIE['wcca'] = null;
 
 		$orders = get_option( 'wcca_orders_' . $wcca_ID, [] );
 
