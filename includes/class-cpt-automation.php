@@ -209,6 +209,10 @@ class Cpt_Automation {
 				WC()->cart->add_to_cart( $product );
 			} else {
 				$wc_product = wc_get_product( $product['product'] );
+				if ( empty( $wc_product ) ) {
+					continue;
+				}
+				
 				if ( $wc_product->is_type( 'simple' ) ) {
 					WC()->cart->add_to_cart( $wc_product->get_id(), $product['quantity'] ?? 1 );
 				} elseif ( $wc_product->is_type( 'variation' ) ) {
