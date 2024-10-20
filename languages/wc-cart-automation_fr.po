@@ -1,11 +1,18 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: wc-cart-automation\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wc-cart-"
+"automation\n"
+"POT-Creation-Date: 2024-10-20 13:27+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
-"Project-Id-Version: wc-cart-automation\n"
-"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.5\n"
 
 #: includes/class-cpt-automation.php:40
 msgid "Unique token"
@@ -27,75 +34,124 @@ msgstr "Fusionner les deux paniers"
 msgid "Products to add"
 msgstr "Produits à ajouter"
 
-#: includes/class-cpt-automation.php:56
+#: includes/class-cpt-automation.php:55
+msgid "Quantity"
+msgstr "Quantité"
+
+#: includes/class-cpt-automation.php:60
+msgid "Product"
+msgstr "Produit"
+
+#: includes/class-cpt-automation.php:70
+msgid "Redirect URL"
+msgstr "URL de redirection"
+
+#: includes/class-cpt-automation.php:74
 msgid "Coupons to add"
 msgstr "Coupons à ajouter"
 
-#: includes/class-cpt-automation.php:143
-msgid "The link you followed was not valid. Please try to copy/paste it in your browser."
-msgstr "Le lien que vous avez suivi n'était pas valide. Veuillez essayer de le copier/coller dans votre navigateur."
+#: includes/class-cpt-automation.php:161
+msgid ""
+"The link you followed was not valid. Please try to copy/paste it in your "
+"browser."
+msgstr ""
+"Le lien que vous avez suivi n'était pas valide. Veuillez essayer de le "
+"copier/coller dans votre navigateur."
 
-#: includes/class-cpt-automation.php:206
+#: includes/class-cpt-automation.php:233
 msgid "Your cart has been successfully updated."
 msgstr "Votre panier a été mis à jour avec succès."
 
-#: includes/class-cpt-automation.php:240
-msgid "Add New Automation"
-msgstr "Ajouter une nouvelle automatisation"
-
-#: includes/class-cpt-automation.php:241
-msgid "Edit Automation"
-msgstr "Modifier l'automatisation"
-
-#: includes/class-cpt-automation.php:242
-msgid "New Automation"
-msgstr "Nouvelle automatisation"
-
-#: includes/class-cpt-automation.php:243
-msgid "View Automation"
-msgstr "Afficher l'automatisation"
-
-#: includes/class-cpt-automation.php:244 includes/class-wcca-admin.php:79
-msgid "View Automations"
-msgstr "Afficher les automatisations"
-
-#: includes/class-cpt-automation.php:245
-msgid "Search Automations"
-msgstr "Automatisations de recherche"
-
-#: includes/class-cpt-automation.php:246
-msgid "No automations found."
-msgstr "Aucune automatisation trouvée."
-
-#: includes/class-cpt-automation.php:247
-msgid "No automations found in Trash."
-msgstr "Aucune automatisation trouvée dans la corbeille."
-
-#: includes/class-cpt-automation.php:248
+#: includes/class-cpt-automation.php:288
+msgctxt "post type general name"
 msgid "Automations"
 msgstr "Automatisations"
 
-#: includes/class-cpt-automation.php:268
+#: includes/class-cpt-automation.php:289
+msgctxt "post type singular name"
+msgid "Automation"
+msgstr "Automatisation"
+
+#: includes/class-cpt-automation.php:290
+msgctxt "automation"
+msgid "Add New"
+msgstr "Ajouter nouveau"
+
+#: includes/class-cpt-automation.php:291
+msgid "Add New Automation"
+msgstr "Ajouter une nouvelle automatisation"
+
+#: includes/class-cpt-automation.php:292
+msgid "Edit Automation"
+msgstr "Modifier l'automatisation"
+
+#: includes/class-cpt-automation.php:293
+msgid "New Automation"
+msgstr "Nouvelle automatisation"
+
+#: includes/class-cpt-automation.php:294
+msgid "View Automation"
+msgstr "Afficher l'automatisation"
+
+#: includes/class-cpt-automation.php:295 includes/class-wcca-admin.php:79
+msgid "View Automations"
+msgstr "Afficher les automatisations"
+
+#: includes/class-cpt-automation.php:296
+msgid "Search Automations"
+msgstr "Automatisations de recherche"
+
+#: includes/class-cpt-automation.php:297
+msgid "No automations found."
+msgstr "Aucune automatisation trouvée."
+
+#: includes/class-cpt-automation.php:298
+msgid "No automations found in Trash."
+msgstr "Aucune automatisation trouvée dans la corbeille."
+
+#: includes/class-cpt-automation.php:299
+msgid "Automations"
+msgstr "Automatisations"
+
+#: includes/class-cpt-automation.php:319
 msgid "Configuration"
 msgstr "Configuration"
 
-#: includes/class-cpt-automation.php:295
+#: includes/class-cpt-automation.php:346
 msgid "Anyone clicking on this link will activate the cart automation."
-msgstr "Toute personne cliquant sur ce lien activera l'automatisation du panier."
+msgstr ""
+"Toute personne cliquant sur ce lien activera l'automatisation du panier."
 
-#: includes/class-cpt-automation.php:302
+#: includes/class-cpt-automation.php:353
+#, php-format
 msgid "Be careful, your link will only work at : %s"
 msgstr "Attention, votre lien ne fonctionnera qu'à : %s"
 
-#: includes/class-cpt-automation.php:306
-msgid "You must first publish this page to enable the link. Clicking on a disable link will not work."
-msgstr "Vous devez d'abord publier cette page pour activer le lien. Cliquer sur un lien de désactivation ne fonctionnera pas."
+#: includes/class-cpt-automation.php:357
+msgid ""
+"You must first publish this page to enable the link. Clicking on a disable "
+"link will not work."
+msgstr ""
+"Vous devez d'abord publier cette page pour activer le lien. Cliquer sur un "
+"lien de désactivation ne fonctionnera pas."
 
-#: includes/class-wcca-admin.php:39
+#: includes/class-wcca-admin.php:29
+#, php-format
+msgctxt "unique"
+msgid "<span title=\"unique %s\">u : %s</span>"
+msgstr "<span title=\"unique %s\">u : %s</span>"
+
+#: includes/class-wcca-admin.php:32
+#, php-format
+msgctxt "all"
+msgid "<span title=\"all %s\">a : %s</span>"
+msgstr "<span title=\"all %s\">a : %s</span>"
+
+#: includes/class-wcca-admin.php:40
 msgid "Openings"
 msgstr "Ouvertures"
 
-#: includes/class-wcca-admin.php:40
+#: includes/class-wcca-admin.php:41
 msgid "Orders"
 msgstr "Commandes"
 
@@ -107,61 +163,55 @@ msgstr "Automatisation du panier"
 msgid "Cart Automation configuration"
 msgstr "Configuration de l'automatisation du panier"
 
-#: includes/class-wcca-admin.php:171
+#: includes/class-wcca-admin.php:71
+#, php-format
+msgid "Active automation : %s"
+msgid_plural "Active automations : %s"
+msgstr[0] "Automatisation active : %s"
+msgstr[1] "Automatisations actives : %s"
+
+#: includes/class-wcca-admin.php:77
+#, php-format
+msgid "Inactive automation : %s"
+msgid_plural "Inactive automations : %s"
+msgstr[0] "Automatisation inactive : %s"
+msgstr[1] "Automatisations inactives : %s"
+
+#: includes/class-wcca-admin.php:117
+msgid "Delete"
+msgstr "Supprimer"
+
+#: includes/class-wcca-admin.php:123
+msgid "Add"
+msgstr "Ajouter"
+
+#: includes/class-wcca-admin.php:236
 msgid "- Select -"
 msgstr "- Sélectionnez -"
 
-#: includes/class-wcca-admin.php:188
+#: includes/class-wcca-admin.php:266
+#, php-format
 msgid "Unrecognized option field of type %s."
 msgstr "Champ d'option non reconnu de type %s."
 
-#. Plugin Name of the plugin/theme
-#: 
-msgid "Woocommerce Cart Automation"
-msgstr "Automatisation du panier Woocommerce"
+#: wc-cart-automation.php:26
+msgid "Shop Cart Automation"
+msgstr "Automatisation du panier"
 
-#. Plugin URI of the plugin/theme
-#: 
-msgid "https://github.com/timotheemoulin/wc-cart-automation"
-msgstr "https://github.com/timotheemoulin/wc-cart-automation"
+#: wc-cart-automation.php:27
+msgid "Enhance your sales with custom cart automation process."
+msgstr ""
+"Améliorez vos ventes avec un processus d'automatisation de panier "
+"personnalisé lié à votre ."
 
-#. Description of the plugin/theme
-#: 
-msgid "Enhance your sales with custom cart automation process linked to your ."
-msgstr "Améliorez vos ventes avec un processus d'automatisation de panier personnalisé lié à votre ."
+#~ msgid "Woocommerce Cart Automation"
+#~ msgstr "Automatisation du panier Woocommerce"
 
-#. Author of the plugin/theme
-#: 
-msgid "Timothée Moulin"
-msgstr "Timothée Moulin"
+#~ msgid "https://github.com/timotheemoulin/wc-cart-automation"
+#~ msgstr "https://github.com/timotheemoulin/wc-cart-automation"
 
-#. Author URI of the plugin/theme
-#: 
-msgid "https://github.com/timotheemoulin"
-msgstr "https://github.com/timotheemoulin"
+#~ msgid "Timothée Moulin"
+#~ msgstr "Timothée Moulin"
 
-#: includes/class-cpt-automation.php:237
-msgctxt "post type general name"
-msgid "Automations"
-msgstr "Automatisations"
-
-#: includes/class-cpt-automation.php:238
-msgctxt "post type singular name"
-msgid "Automation"
-msgstr "Automatisation"
-
-#: includes/class-cpt-automation.php:239
-msgctxt "automation"
-msgid "Add New"
-msgstr "Ajouter nouveau"
-
-#: includes/class-wcca-admin.php:28
-msgctxt "unique"
-msgid "<span title=\"unique %s\">u : %s</span>"
-msgstr "<span title=\"unique %s\">u : %s</span>"
-
-#: includes/class-wcca-admin.php:31
-msgctxt "all"
-msgid "<span title=\"all %s\">a : %s</span>"
-msgstr "<span title=\"all %s\">a : %s</span>"
-
+#~ msgid "https://github.com/timotheemoulin"
+#~ msgstr "https://github.com/timotheemoulin"

@@ -7,7 +7,7 @@
  * Author URI:      https://github.com/timotheemoulin
  * Text Domain:     wc-cart-automation
  * Domain Path:     /languages
- * Version:         0.2.0
+ * Version:         1.0.0
  *
  * @package         Wc_Promo_Cart
  */

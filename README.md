@@ -2,11 +2,12 @@
 Contributors: timotheemoulin
 Tags: woocommerce, automation, cart, shop, ecommerce
 Requires at least: 5.4
-Tested up to: 5.9
+Tested up to: 6.6.2
 Requires PHP: 7.4
-Stable tag: 0.1.2
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Requires Plugins: woocommerce
 
 Automate cart creation for Woocommerce. Allows generating cart with voucher code and preselected products.
 
@@ -38,11 +39,20 @@ are also summed for you.
 
 == Frequently Asked Questions ==
 
-= Is this plugin free to use? = Yes, and it always will be.
+= Is this plugin free to use? =
 
-= Is there a paid version? = No, and it never will be.
+Yes, and it always will be.
+
+= Is there a paid version? =
+
+No, and it never will be.
 
 == Changelog ==
+
+= 1.0.0 =
+* Add a redirect URL
+* Update the code to work with WP 6.6 and WooCommerce 9.3.3
+* PHP 8.3 compatibility
 
 = 0.2.1 =
 * Add French translations

@@ -1,29 +1,29 @@
 # Copyright (C) 2022 Timothée Moulin
 # This file is distributed under the same license as the Woocommerce Cart Automation package.
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Woocommerce Cart Automation 0.1.0\n"
-"Report-Msgid-Bugs-To: "
-"https://wordpress.org/support/plugin/wc-cart-automation\n"
-"POT-Creation-Date: 2022-01-29 06:01:38+00:00\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wc-cart-"
+"automation\n"
+"POT-Creation-Date: 2024-10-20 14:22+0200\n"
 "PO-Revision-Date: 2022-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"X-Generator: grunt-wp-i18n 0.5.4\n"
-"X-Poedit-KeywordsList: "
-"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
-"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
 "Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-Country: United States\n"
+"X-Generator: Poedit 3.5\n"
+"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;"
+"_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;"
+"esc_html_x:1,2c\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-Basepath: ../\n"
-"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-Basepath: ..\n"
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
+"X-Poedit-SearchPath-0: .\n"
 
 #: includes/class-cpt-automation.php:40
 msgid "Unique token"
@@ -45,79 +45,123 @@ msgstr ""
 msgid "Products to add"
 msgstr ""
 
-#: includes/class-cpt-automation.php:56
+#: includes/class-cpt-automation.php:55
+msgid "Quantity"
+msgstr ""
+
+#: includes/class-cpt-automation.php:60
+msgid "Product"
+msgstr ""
+
+#: includes/class-cpt-automation.php:70
+msgid "Redirect URL"
+msgstr ""
+
+#: includes/class-cpt-automation.php:74
 msgid "Coupons to add"
 msgstr ""
 
-#: includes/class-cpt-automation.php:143
+#: includes/class-cpt-automation.php:161
 msgid ""
 "The link you followed was not valid. Please try to copy/paste it in your "
 "browser."
 msgstr ""
 
-#: includes/class-cpt-automation.php:206
+#: includes/class-cpt-automation.php:240
 msgid "Your cart has been successfully updated."
 msgstr ""
 
-#: includes/class-cpt-automation.php:240
-msgid "Add New Automation"
-msgstr ""
-
-#: includes/class-cpt-automation.php:241
-msgid "Edit Automation"
-msgstr ""
-
 #: includes/class-cpt-automation.php:242
-msgid "New Automation"
-msgstr ""
-
-#: includes/class-cpt-automation.php:243
-msgid "View Automation"
-msgstr ""
-
-#: includes/class-cpt-automation.php:244 includes/class-wcca-admin.php:79
-msgid "View Automations"
-msgstr ""
-
-#: includes/class-cpt-automation.php:245
-msgid "Search Automations"
-msgstr ""
-
-#: includes/class-cpt-automation.php:246
-msgid "No automations found."
-msgstr ""
-
-#: includes/class-cpt-automation.php:247
-msgid "No automations found in Trash."
-msgstr ""
-
-#: includes/class-cpt-automation.php:248
-msgid "Automations"
-msgstr ""
-
-#: includes/class-cpt-automation.php:268
-msgid "Configuration"
-msgstr ""
-
-#: includes/class-cpt-automation.php:295
-msgid "Anyone clicking on this link will activate the cart automation."
+msgid "Your coupon has been applied to your cart."
 msgstr ""
 
 #: includes/class-cpt-automation.php:302
-msgid "Be careful, your link will only work at : %s"
+msgctxt "post type general name"
+msgid "Automations"
+msgstr ""
+
+#: includes/class-cpt-automation.php:303
+msgctxt "post type singular name"
+msgid "Automation"
+msgstr ""
+
+#: includes/class-cpt-automation.php:304
+msgctxt "automation"
+msgid "Add New"
+msgstr ""
+
+#: includes/class-cpt-automation.php:305
+msgid "Add New Automation"
 msgstr ""
 
 #: includes/class-cpt-automation.php:306
+msgid "Edit Automation"
+msgstr ""
+
+#: includes/class-cpt-automation.php:307
+msgid "New Automation"
+msgstr ""
+
+#: includes/class-cpt-automation.php:308
+msgid "View Automation"
+msgstr ""
+
+#: includes/class-cpt-automation.php:309 includes/class-wcca-admin.php:79
+msgid "View Automations"
+msgstr ""
+
+#: includes/class-cpt-automation.php:310
+msgid "Search Automations"
+msgstr ""
+
+#: includes/class-cpt-automation.php:311
+msgid "No automations found."
+msgstr ""
+
+#: includes/class-cpt-automation.php:312
+msgid "No automations found in Trash."
+msgstr ""
+
+#: includes/class-cpt-automation.php:313
+msgid "Automations"
+msgstr ""
+
+#: includes/class-cpt-automation.php:333
+msgid "Configuration"
+msgstr ""
+
+#: includes/class-cpt-automation.php:360
+msgid "Anyone clicking on this link will activate the cart automation."
+msgstr ""
+
+#: includes/class-cpt-automation.php:367
+#, php-format
+msgid "Be careful, your link will only work at : %s"
+msgstr ""
+
+#: includes/class-cpt-automation.php:371
 msgid ""
 "You must first publish this page to enable the link. Clicking on a disable "
 "link will not work."
 msgstr ""
 
-#: includes/class-wcca-admin.php:39
-msgid "Openings"
+#: includes/class-wcca-admin.php:29
+#, php-format
+msgctxt "unique"
+msgid "<span title=\"unique %s\">u : %s</span>"
+msgstr ""
+
+#: includes/class-wcca-admin.php:32
+#, php-format
+msgctxt "all"
+msgid "<span title=\"all %s\">a : %s</span>"
 msgstr ""
 
 #: includes/class-wcca-admin.php:40
+msgid "Openings"
+msgstr ""
+
+#: includes/class-wcca-admin.php:41
 msgid "Orders"
 msgstr ""
 
@@ -129,55 +173,41 @@ msgstr ""
 msgid "Cart Automation configuration"
 msgstr ""
 
-#: includes/class-wcca-admin.php:171
+#: includes/class-wcca-admin.php:71
+#, php-format
+msgid "Active automation : %s"
+msgid_plural "Active automations : %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-wcca-admin.php:77
+#, php-format
+msgid "Inactive automation : %s"
+msgid_plural "Inactive automations : %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-wcca-admin.php:117
+msgid "Delete"
+msgstr ""
+
+#: includes/class-wcca-admin.php:123
+msgid "Add"
+msgstr ""
+
+#: includes/class-wcca-admin.php:236
 msgid "- Select -"
 msgstr ""
 
-#: includes/class-wcca-admin.php:188
+#: includes/class-wcca-admin.php:266
+#, php-format
 msgid "Unrecognized option field of type %s."
 msgstr ""
 
-#. Plugin Name of the plugin/theme
-msgid "Woocommerce Cart Automation"
+#: wc-cart-automation.php:26
+msgid "Shop Cart Automation"
 msgstr ""
 
-#. Plugin URI of the plugin/theme
-msgid "https://github.com/timotheemoulin/wc-cart-automation"
-msgstr ""
-
-#. Description of the plugin/theme
-msgid "Enhance your sales with custom cart automation process linked to your ."
-msgstr ""
-
-#. Author of the plugin/theme
-msgid "Timothée Moulin"
-msgstr ""
-
-#. Author URI of the plugin/theme
-msgid "https://github.com/timotheemoulin"
-msgstr ""
-
-#: includes/class-cpt-automation.php:237
-msgctxt "post type general name"
-msgid "Automations"
-msgstr ""
-
-#: includes/class-cpt-automation.php:238
-msgctxt "post type singular name"
-msgid "Automation"
-msgstr ""
-
-#: includes/class-cpt-automation.php:239
-msgctxt "automation"
-msgid "Add New"
-msgstr ""
-
-#: includes/class-wcca-admin.php:28
-msgctxt "unique"
-msgid "<span title=\"unique %s\">u : %s</span>"
-msgstr ""
-
-#: includes/class-wcca-admin.php:31
-msgctxt "all"
-msgid "<span title=\"all %s\">a : %s</span>"
+#: wc-cart-automation.php:27
+msgid "Enhance your sales with custom cart automation process."
 msgstr ""
